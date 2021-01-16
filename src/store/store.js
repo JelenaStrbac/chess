@@ -4,7 +4,7 @@ import boardReducer from "./slices/board/boardSlice";
 const store = configureStore({
   reducer: {
     // ovde upisati nazive reducer-a (levo je naziv koji ce nam biti u state-u i u ReduxDevTools-u)
-    board: boardReducer,
+    game: boardReducer,
   },
 });
 

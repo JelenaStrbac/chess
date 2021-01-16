@@ -31,16 +31,19 @@ const figures = {
 const Square = (props) => {
   return (
     <SquareContainer
-      id={props.id}
+      id={props.field}
+      name={props.fig}
       color={props.color}
       onClick={props.handleClick}
+      active={props.active}
     >
       {props.fig ? (
         <img
-          width="50px"
-          height="50px"
+          width="80px"
+          height="80px"
           src={figures[props.fig]}
-          id={props.id}
+          id={props.field}
+          name={props.fig}
           alt={props.fig}
         />
       ) : null}
@@ -50,12 +53,17 @@ const Square = (props) => {
 
 const SquareContainer = styled.div`
   background-color: ${(props) =>
-    props.color === "white" ? "#ffce9e" : "#d18b47"};
-  width: 50px;
-  height: 50px;
+    props.color === "selected"
+      ? "#abd88d"
+      : props.color === "white"
+      ? "#ffce9e"
+      : "#d18b47"};
+  width: 80px;
+  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: ${(props) => (props.active ? "not-allowed" : "pointer")};
 `;
 
 export default Square;
