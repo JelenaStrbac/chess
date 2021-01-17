@@ -54,6 +54,7 @@ const boardSlice = createSlice({
             state.selectedField = currField;
             state.activePlayerStatus = "moving";
             state.possibleMoves = movingFigures[currFigure?.[1]](
+              state.board,
               state.activePlayer,
               currentRow,
               currentCol
@@ -69,6 +70,7 @@ const boardSlice = createSlice({
             state.activePlayer === state.current.figure[0] &&
             checkField(state.board, state.activePlayer, wanRow, wanCol) &&
             movingFigures[state.current.figure[1]](
+              state.board,
               state.activePlayer,
               currRow,
               currCol
