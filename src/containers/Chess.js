@@ -10,6 +10,7 @@ const Chess = () => {
   const { board } = useSelector((state) => state.game);
 
   const { activePlayer } = useSelector((state) => state.game);
+  const { possibleMoves } = useSelector((state) => state.game);
 
   const { selectedField } = useSelector((state) => state.game);
   const [row, column] = selectedField?.split("-");
@@ -40,6 +41,9 @@ const Chess = () => {
                   ? "white"
                   : "black"
               }
+              possibleMove={possibleMoves
+                .map((element) => element.split("-"))
+                .some((n) => Number(n[0]) === i && Number(n[1]) === j)}
               fig={elem}
               handleClick={onClickHandler}
             ></Square>

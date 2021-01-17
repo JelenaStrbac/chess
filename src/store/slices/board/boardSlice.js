@@ -20,6 +20,7 @@ export const initialState = {
     field: "",
     figure: "",
   },
+  possibleMoves: [],
 };
 
 const boardSlice = createSlice({
@@ -30,6 +31,7 @@ const boardSlice = createSlice({
     selectAndMoveFigure: {
       reducer(state, action) {
         const { currField, currFigure } = action.payload;
+        const [currentRow, currentCol] = currField?.split("-");
 
         if (
           state.activePlayerStatus === "selecting" &&
@@ -39,6 +41,11 @@ const boardSlice = createSlice({
           state.current.figure = currFigure;
           state.selectedField = currField;
           state.activePlayerStatus = "moving";
+          state.possibleMoves = movingFigures[currFigure?.[1]](
+            state.activePlayer,
+            currentRow,
+            currentCol
+          );
         }
 
         const [currRow, currCol] = state.current.field?.split("-");
@@ -51,14 +58,13 @@ const boardSlice = createSlice({
           movingFigures[state.current.figure[1]](
             state.activePlayer,
             currRow,
-            currCol,
-            wanRow,
-            wanCol
-          )
+            currCol
+          ).includes(currField)
         ) {
           state.selectedField = `${wanRow}-${wanCol}`;
           state.board[wanRow][wanCol] = state.current.figure;
           state.board[currRow][currCol] = null;
+          state.possibleMoves = [];
           state.activePlayerStatus = "selecting";
           state.activePlayer = state.activePlayer === "W" ? "B" : "W";
         }
