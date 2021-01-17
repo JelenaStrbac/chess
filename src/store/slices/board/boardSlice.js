@@ -33,40 +33,54 @@ const boardSlice = createSlice({
         const { currField, currFigure } = action.payload;
         const [currentRow, currentCol] = currField?.split("-");
 
+        // touch-move rule not applied - player can determine to play with another figure
         if (
-          state.activePlayerStatus === "selecting" &&
-          state.activePlayer === currFigure?.[0]
+          state.current.field === currField &&
+          state.current.figure === currFigure
         ) {
-          state.current.field = currField;
-          state.current.figure = currFigure;
-          state.selectedField = currField;
-          state.activePlayerStatus = "moving";
-          state.possibleMoves = movingFigures[currFigure?.[1]](
-            state.activePlayer,
-            currentRow,
-            currentCol
-          );
-        }
-
-        const [currRow, currCol] = state.current.field?.split("-");
-        const [wanRow, wanCol] = currField?.split("-");
-
-        if (
-          state.activePlayerStatus === "moving" &&
-          state.activePlayer === state.current.figure[0] &&
-          checkField(state.board, state.activePlayer, wanRow, wanCol) &&
-          movingFigures[state.current.figure[1]](
-            state.activePlayer,
-            currRow,
-            currCol
-          ).includes(currField)
-        ) {
-          state.selectedField = `${wanRow}-${wanCol}`;
-          state.board[wanRow][wanCol] = state.current.figure;
-          state.board[currRow][currCol] = null;
-          state.possibleMoves = [];
           state.activePlayerStatus = "selecting";
-          state.activePlayer = state.activePlayer === "W" ? "B" : "W";
+          state.selectedField = "";
+          state.current.field = "";
+          state.current.figure = "";
+          state.possibleMoves = [];
+        } else {
+          // select the figure
+          if (
+            state.activePlayerStatus === "selecting" &&
+            state.activePlayer === currFigure?.[0]
+          ) {
+            state.current.field = currField;
+            state.current.figure = currFigure;
+            state.selectedField = currField;
+            state.activePlayerStatus = "moving";
+            state.possibleMoves = movingFigures[currFigure?.[1]](
+              state.activePlayer,
+              currentRow,
+              currentCol
+            );
+          }
+
+          // move the figure on the desired square
+          const [currRow, currCol] = state.current.field?.split("-");
+          const [wanRow, wanCol] = currField?.split("-");
+
+          if (
+            state.activePlayerStatus === "moving" &&
+            state.activePlayer === state.current.figure[0] &&
+            checkField(state.board, state.activePlayer, wanRow, wanCol) &&
+            movingFigures[state.current.figure[1]](
+              state.activePlayer,
+              currRow,
+              currCol
+            ).includes(currField)
+          ) {
+            state.selectedField = `${wanRow}-${wanCol}`;
+            state.board[wanRow][wanCol] = state.current.figure;
+            state.board[currRow][currCol] = null;
+            state.possibleMoves = [];
+            state.activePlayerStatus = "selecting";
+            state.activePlayer = state.activePlayer === "W" ? "B" : "W";
+          }
         }
       },
       prepare(currField, currFigure) {
