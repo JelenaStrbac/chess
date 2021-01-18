@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import checkField from "../../../utils/checkField";
 import movingFigures from "../../../utils/movingFigures";
+import writeNotation from "../../../utils/writeNotation";
 
 export const initialState = {
   board: [
@@ -21,6 +22,11 @@ export const initialState = {
     figure: "",
   },
   possibleMoves: [],
+  notation: [],
+  captured: {
+    W: [],
+    B: [],
+  },
 };
 
 const boardSlice = createSlice({
@@ -76,10 +82,26 @@ const boardSlice = createSlice({
               currCol
             ).includes(currField)
           ) {
+            let captured = "";
+            if (state.board[wanRow][wanCol]) {
+              captured = state.board[wanRow][wanCol];
+              state.captured[state.activePlayer].push(
+                state.board[wanRow][wanCol]
+              );
+            }
             state.selectedField = `${wanRow}-${wanCol}`;
             state.board[wanRow][wanCol] = state.current.figure;
             state.board[currRow][currCol] = null;
             state.possibleMoves = [];
+            state.notation.push(
+              writeNotation(
+                state.current.figure,
+                wanRow,
+                wanCol,
+                captured,
+                currCol
+              )
+            );
             state.activePlayerStatus = "selecting";
             state.activePlayer = state.activePlayer === "W" ? "B" : "W";
           }

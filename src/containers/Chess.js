@@ -15,6 +15,12 @@ const Chess = () => {
   const { selectedField } = useSelector((state) => state.game);
   const [row, column] = selectedField?.split("-");
 
+  const { notation } = useSelector((state) => state.game);
+  const notationWhite = notation.filter((el, i) => i % 2 === 0);
+  const notationBlack = notation.filter((el, i) => i % 2 !== 0);
+
+  const { captured } = useSelector((state) => state.game);
+
   const onClickHandler = (e) => {
     const currTargetedField = e.target.id;
     const currTargetedFigure = e.target.name;
@@ -24,7 +30,12 @@ const Chess = () => {
 
   return (
     <Container>
-      <Player color="white" activePlayer={activePlayer}>
+      <Player
+        color="white"
+        activePlayer={activePlayer}
+        capturedFigures={captured?.["W"]}
+        notation={notationWhite}
+      >
         WHITE
       </Player>
 
@@ -51,7 +62,12 @@ const Chess = () => {
         )}
       </ChessBoardContainer>
 
-      <Player color="black" activePlayer={activePlayer}>
+      <Player
+        color="black"
+        activePlayer={activePlayer}
+        capturedFigures={captured?.["B"]}
+        notation={notationBlack}
+      >
         BLACK
       </Player>
     </Container>
