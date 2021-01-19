@@ -36,7 +36,6 @@ const Square = (props) => {
       color={props.color}
       onClick={props.handleClick}
       active={props.active}
-      possibleMove={props.possibleMove}
     >
       {props.fig ? (
         <img
@@ -50,6 +49,9 @@ const Square = (props) => {
       ) : null}
       {props.possibleMove ? (
         <Circle id={props.field} name={props.fig}></Circle>
+      ) : null}
+      {props.capturedFigures ? (
+        <CapturedCircle id={props.field} name={props.fig}></CapturedCircle>
       ) : null}
     </SquareContainer>
   );
@@ -68,6 +70,7 @@ const SquareContainer = styled.div`
   justify-content: center;
   align-items: center;
   cursor: ${(props) => (props.active ? "not-allowed" : "pointer")};
+  position: relative;
 `;
 
 const Circle = styled.div`
@@ -75,6 +78,15 @@ const Circle = styled.div`
   width: 25px;
   background: rgba(171, 216, 141, 0.4);
   border-radius: 50%;
+`;
+
+const CapturedCircle = styled.div`
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  border: 8px solid rgba(171, 216, 141, 0.4);
+  z-index: 100;
+  position: absolute;
 `;
 
 export default Square;

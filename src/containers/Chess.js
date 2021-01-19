@@ -56,6 +56,14 @@ const Chess = () => {
               possibleMove={possibleMoves
                 .map((element) => element.split("-"))
                 .some((n) => Number(n[0]) === i && Number(n[1]) === j)}
+              capturedFigures={possibleMoves
+                .map((element) => element.split("-"))
+                .some(
+                  (n) =>
+                    Number(n[0]) === i &&
+                    Number(n[1]) === j &&
+                    board[i][j] !== null
+                )}
               fig={elem}
               handleClick={onClickHandler}
             ></Square>
