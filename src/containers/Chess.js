@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Square from "../components/Square";
 import { selectAndMoveFigure } from "../store/slices/board/boardSlice";
 import Player from "../components/Player";
+//import PawnPromotion from "../components/PawnPromotion";
 
 const Chess = () => {
   const dispatch = useDispatch();
@@ -70,6 +71,8 @@ const Chess = () => {
       >
         BLACK
       </Player>
+      {/* 
+      <PawnPromotion /> */}
     </Container>
   );
 };

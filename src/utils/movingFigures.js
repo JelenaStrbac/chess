@@ -43,6 +43,11 @@ const movements = {
         board[4][currCol] === null
       )
         squaresArr.push(`${currRow - 2}-${currCol}`);
+
+      // pawn promotion
+      if (currRow === 0) {
+        squaresArr.push("pawn promotion");
+      }
     } else {
       // BLACK
       if (board[currRow + 1][currCol] === null)

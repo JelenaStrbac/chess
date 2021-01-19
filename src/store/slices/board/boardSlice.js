@@ -27,6 +27,10 @@ export const initialState = {
     W: [],
     B: [],
   },
+  pawnPromotion: {
+    W: "Q",
+    B: "Q",
+  },
 };
 
 const boardSlice = createSlice({
@@ -50,7 +54,7 @@ const boardSlice = createSlice({
           state.current.figure = "";
           state.possibleMoves = [];
         } else {
-          // select the figure
+          // *** select the figure ***
           if (
             state.activePlayerStatus === "selecting" &&
             state.activePlayer === currFigure?.[0]
@@ -65,10 +69,10 @@ const boardSlice = createSlice({
               currentRow,
               currentCol,
               state.notation
-            ).filter((el) => el !== "en passant");
+            ).filter((el) => el !== "en passant" && el !== "pawn promotion");
           }
 
-          // move the figure on the desired square
+          // *** move the figure on the desired square ***
           const [currRow, currCol] = state.current.field?.split("-");
           const [wanRow, wanCol] = currField?.split("-");
 
@@ -116,6 +120,22 @@ const boardSlice = createSlice({
             } else {
               state.board[currRow][currCol] = null;
             }
+            // check for pawn promotion
+            if (
+              state.current.figure?.[1] === "P" &&
+              movingFigures[state.current.figure[1]](
+                state.board,
+                state.activePlayer,
+                currRow,
+                currCol,
+                state.notation
+              ).includes("pawn promotion")
+            ) {
+              state.board[currRow][currCol] = `${state.activePlayer}${
+                state.pawnPromotion[state.activePlayer]
+              }`;
+            }
+            // continue reseting when figure is moved
             state.possibleMoves = [];
             state.notation.push(
               writeNotation(
@@ -137,9 +157,13 @@ const boardSlice = createSlice({
         };
       },
     },
+    promotePawnTo(state, action) {
+      debugger;
+      state.pawnPromotion[state.activePlayer] = action.payload;
+    },
   },
 });
 
-export const { selectAndMoveFigure } = boardSlice.actions;
+export const { selectAndMoveFigure, promotePawnTo } = boardSlice.actions;
 
 export default boardSlice.reducer;
