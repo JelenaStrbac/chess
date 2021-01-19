@@ -63,8 +63,9 @@ const boardSlice = createSlice({
               state.board,
               state.activePlayer,
               currentRow,
-              currentCol
-            );
+              currentCol,
+              state.notation
+            ).filter((el) => el !== "en passant");
           }
 
           // move the figure on the desired square
@@ -79,9 +80,11 @@ const boardSlice = createSlice({
               state.board,
               state.activePlayer,
               currRow,
-              currCol
+              currCol,
+              state.notation
             ).includes(currField)
           ) {
+            // adding captured figures
             let captured = "";
             if (state.board[wanRow][wanCol]) {
               captured = state.board[wanRow][wanCol];
@@ -91,7 +94,28 @@ const boardSlice = createSlice({
             }
             state.selectedField = `${wanRow}-${wanCol}`;
             state.board[wanRow][wanCol] = state.current.figure;
-            state.board[currRow][currCol] = null;
+            // checking for en passant move only for pawn
+            if (
+              state.current.figure?.[1] === "P" &&
+              movingFigures[state.current.figure[1]](
+                state.board,
+                state.activePlayer,
+                currRow,
+                currCol,
+                state.notation
+              ).includes("en passant")
+            ) {
+              const numForEnPassantMoving = state.activePlayer === "W" ? 1 : -1;
+              state.captured[state.activePlayer].push(
+                state.board[Number(wanRow) + numForEnPassantMoving][wanCol]
+              );
+              state.board[Number(wanRow) + numForEnPassantMoving][
+                wanCol
+              ] = null;
+              state.board[currRow][currCol] = null;
+            } else {
+              state.board[currRow][currCol] = null;
+            }
             state.possibleMoves = [];
             state.notation.push(
               writeNotation(

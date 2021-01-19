@@ -1,5 +1,5 @@
 const movements = {
-  P: (board, player, currentRow, currentCol) => {
+  P: (board, player, currentRow, currentCol, notation) => {
     let squaresArr = [];
     const currRow = Number(currentRow);
     const currCol = Number(currentCol);
@@ -17,6 +17,25 @@ const movements = {
       if (board[currRow - 1][currCol - 1]?.[0] === "B")
         squaresArr.push(`${currRow - 1}-${currCol - 1}`);
 
+      // en passant
+      const lastMoveRow = notation?.[notation.length - 1]?.[1];
+      if (
+        currRow === 3 &&
+        board[3]?.[currCol + 1] === "BP" &&
+        Number(lastMoveRow) === 5
+      ) {
+        squaresArr.push(`${currRow - 1}-${currCol + 1}`);
+        squaresArr.push("en passant");
+      }
+      if (
+        currRow === 3 &&
+        board[3]?.[currCol - 1] === "BP" &&
+        Number(lastMoveRow) === 5
+      ) {
+        squaresArr.push(`${currRow - 1}-${currCol - 1}`);
+        squaresArr.push("en passant");
+      }
+
       // moving pawn for the first time - allowed to move one or two fields in front if both fields are empty
       if (
         currRow === 6 &&
@@ -33,6 +52,24 @@ const movements = {
         squaresArr.push(`${currRow + 1}-${currCol - 1}`);
       if (board[currRow + 1][currCol + 1]?.[0] === "W")
         squaresArr.push(`${currRow + 1}-${currCol + 1}`);
+
+      const lastMoveRow = notation?.[notation.length - 1]?.[1];
+      if (
+        currRow === 4 &&
+        board[4]?.[currCol + 1] === "WP" &&
+        Number(lastMoveRow) === 4
+      ) {
+        squaresArr.push(`${currRow + 1}-${currCol + 1}`);
+        squaresArr.push("en passant");
+      }
+      if (
+        currRow === 3 &&
+        board[4]?.[currCol - 1] === "WP" &&
+        Number(lastMoveRow) === 4
+      ) {
+        squaresArr.push(`${currRow + 1}-${currCol - 1}`);
+        squaresArr.push("en passant");
+      }
 
       if (
         currRow === 1 &&
