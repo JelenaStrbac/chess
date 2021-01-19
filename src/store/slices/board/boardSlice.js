@@ -69,7 +69,7 @@ const boardSlice = createSlice({
               currentRow,
               currentCol,
               state.notation
-            ).filter((el) => el !== "en passant" && el !== "pawn promotion");
+            )?.filter((el) => el !== "en passant" && el !== "pawn promotion");
           }
 
           // *** move the figure on the desired square ***
@@ -158,7 +158,6 @@ const boardSlice = createSlice({
       },
     },
     promotePawnTo(state, action) {
-      debugger;
       state.pawnPromotion[state.activePlayer] = action.payload;
     },
   },
