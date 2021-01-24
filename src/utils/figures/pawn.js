@@ -1,5 +1,12 @@
 // *** PAWN *** //
-export const pawn = (board, player, currentRow, currentCol, notation) => {
+export const pawn = (
+  board,
+  player,
+  currentRow,
+  currentCol,
+  notation,
+  pawnDiagonal
+) => {
   let squaresArr = [];
   const currRow = Number(currentRow);
   const currCol = Number(currentCol);
@@ -16,6 +23,12 @@ export const pawn = (board, player, currentRow, currentCol, notation) => {
       squaresArr.push(`${currRow - 1}-${currCol + 1}`);
     if (board[currRow - 1][currCol - 1]?.[0] === "B")
       squaresArr.push(`${currRow - 1}-${currCol - 1}`);
+
+    // capturing pawnDiagonal - only to check KINGs moves and checkmate
+    if (pawnDiagonal) {
+      squaresArr.push(`${currRow - 1}-${currCol + 1}`);
+      squaresArr.push(`${currRow - 1}-${currCol - 1}`);
+    }
 
     // en passant
     const lastMoveRow = notation?.[notation.length - 1]?.[1];
@@ -40,7 +53,8 @@ export const pawn = (board, player, currentRow, currentCol, notation) => {
     if (
       currRow === 6 &&
       board[5][currCol] === null &&
-      board[4][currCol] === null
+      board[4][currCol] === null &&
+      !pawnDiagonal
     )
       squaresArr.push(`${currRow - 2}-${currCol}`);
 
@@ -57,6 +71,12 @@ export const pawn = (board, player, currentRow, currentCol, notation) => {
       squaresArr.push(`${currRow + 1}-${currCol - 1}`);
     if (board[currRow + 1][currCol + 1]?.[0] === "W")
       squaresArr.push(`${currRow + 1}-${currCol + 1}`);
+
+    // capturing pawnDiagonal - only to check KINGs moves and checkmate
+    if (pawnDiagonal) {
+      squaresArr.push(`${currRow + 1}-${currCol - 1}`);
+      squaresArr.push(`${currRow + 1}-${currCol + 1}`);
+    }
 
     const lastMoveRow = notation?.[notation.length - 1]?.[1];
     if (
@@ -79,7 +99,8 @@ export const pawn = (board, player, currentRow, currentCol, notation) => {
     if (
       currRow === 1 &&
       board[2][currCol] === null &&
-      board[3][currCol] === null
+      board[3][currCol] === null &&
+      !pawnDiagonal
     )
       squaresArr.push(`${currRow + 2}-${currCol}`);
   }

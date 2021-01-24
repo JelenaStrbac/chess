@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import checkField from "../../../utils/checkField";
+import { checkmate } from "../../../utils/checkmate";
+import { findAllMoves } from "../../../utils/findAllMoves";
 import movingFigures from "../../../utils/movingFigures";
 import writeNotation from "../../../utils/writeNotation";
 
@@ -27,6 +29,14 @@ export const initialState = {
     W: [],
     B: [],
   },
+  checkmate: {
+    W: false,
+    B: false,
+  },
+  allPossibleMoves: {
+    W: [],
+    B: [],
+  },
   pawnPromotion: {
     W: "Q",
     B: "Q",
@@ -37,11 +47,12 @@ const boardSlice = createSlice({
   name: "board",
   initialState,
   reducers: {
-    // 1. reducer
     selectAndMoveFigure: {
       reducer(state, action) {
         const { currField, currFigure } = action.payload;
         const [currentRow, currentCol] = currField?.split("-");
+
+        const oppositePlayer = state.activePlayer === "W" ? "B" : "W";
 
         // touch-move rule not applied - player can determine to play with another figure
         if (
@@ -63,13 +74,45 @@ const boardSlice = createSlice({
             state.current.figure = currFigure;
             state.selectedField = currField;
             state.activePlayerStatus = "moving";
-            state.possibleMoves = movingFigures[currFigure?.[1]](
+            // find all moves of opposite player
+            let pawnDiagonal = true;
+            state.allPossibleMoves[oppositePlayer] = findAllMoves(
+              state.board,
+              oppositePlayer,
+              state.notation,
+              pawnDiagonal
+            );
+            // check if active player KING is under checkmate
+            state.checkmate[state.activePlayer] = checkmate(
               state.board,
               state.activePlayer,
-              currentRow,
-              currentCol,
-              state.notation
-            )?.filter((el) => el !== "en passant" && el !== "pawn promotion");
+              state.allPossibleMoves[oppositePlayer]
+            );
+            // determine the possible fields for selected figure only if king is not under checkmate (if yes, no possible moves - only king can move)
+            if (
+              state.checkmate[state.activePlayer] &&
+              currFigure?.[1] !== "K"
+            ) {
+              state.possibleMoves = [];
+            } else if (currFigure?.[1] === "K") {
+              state.possibleMoves = movingFigures["K"](
+                state.board,
+                state.activePlayer,
+                currentRow,
+                currentCol
+              ).filter(
+                (element) =>
+                  !state.allPossibleMoves[oppositePlayer].includes(element)
+              );
+            } else if (!state.checkmate[state.activePlayer]) {
+              state.possibleMoves = movingFigures[currFigure?.[1]](
+                state.board,
+                state.activePlayer,
+                currentRow,
+                currentCol,
+                state.notation
+              )?.filter((el) => el !== "en passant" && el !== "pawn promotion");
+            }
           }
 
           // *** move the figure on the desired square ***
@@ -80,13 +123,7 @@ const boardSlice = createSlice({
             state.activePlayerStatus === "moving" &&
             state.activePlayer === state.current.figure[0] &&
             checkField(state.board, state.activePlayer, wanRow, wanCol) &&
-            movingFigures[state.current.figure[1]](
-              state.board,
-              state.activePlayer,
-              currRow,
-              currCol,
-              state.notation
-            ).includes(currField)
+            state.possibleMoves.includes(currField)
           ) {
             // adding captured figures
             let captured = "";
@@ -98,6 +135,7 @@ const boardSlice = createSlice({
             }
             state.selectedField = `${wanRow}-${wanCol}`;
             state.board[wanRow][wanCol] = state.current.figure;
+
             // checking for en passant move only for pawn
             if (
               state.current.figure?.[1] === "P" &&

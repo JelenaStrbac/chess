@@ -95,7 +95,7 @@ const Box = styled.div`
   flex-direction: column;
   margin-top: 0.5rem;
   font-weight: bold;
-  background-color: #272522;
+  background-color: rgba(39, 37, 34, 0.3);
   border: 3px double #7a7876;
   min-height: 200px;
 `;
