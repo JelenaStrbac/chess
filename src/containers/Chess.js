@@ -13,8 +13,8 @@ const Chess = () => {
   const { activePlayer } = useSelector((state) => state.game);
   const { possibleMoves } = useSelector((state) => state.game);
 
-  const { selectedField } = useSelector((state) => state.game);
-  const [row, column] = selectedField?.split("-");
+  const { field } = useSelector((state) => state.game.current);
+  const [row, column] = field?.split("-");
 
   const { notation } = useSelector((state) => state.game);
   const notationWhite = notation.filter((el, i) => i % 2 === 0);

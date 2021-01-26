@@ -1,14 +1,21 @@
-import movements from "../utils/movingFigures";
+import movingFigures from "../utils/movingFigures";
 
 export const findAllMoves = (board, player, notation, pawnDiagonal) => {
-  //const oppositePlayer = player === "W" ? "B" : "W";
+  const oppositePlayer = player === "W" ? "B" : "W";
 
-  let allPossibleMoves = [];
+  const allPossibleMoves = [];
   board.forEach((row, i) =>
     row.forEach((elem, j) => {
-      if (elem !== null && elem?.[0] === player) {
+      if (elem !== null && elem?.[0] === oppositePlayer) {
         allPossibleMoves.push(
-          ...movements[elem?.[1]](board, player, i, j, notation, pawnDiagonal)
+          ...movingFigures[elem?.[1]](
+            board,
+            oppositePlayer,
+            i,
+            j,
+            notation,
+            pawnDiagonal
+          )
         );
       }
     })

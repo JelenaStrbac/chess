@@ -13,19 +13,37 @@ export const pawn = (
 
   // WHITE
   if (player === "W") {
+    // pawn promotion
+    if (currRow === 0) {
+      squaresArr.push("pawn promotion");
+    }
+
     // moving 1 field in front if that field is empty
-    if (board[currRow - 1][currCol] === null) {
+    if (currRow - 1 >= 0 && board?.[currRow - 1][currCol] === null) {
       squaresArr.push(`${currRow - 1}-${currCol}`);
     }
 
     // capturing black on diagonal
-    if (board[currRow - 1][currCol + 1]?.[0] === "B")
+    if (
+      board?.[currRow - 1]?.[currCol + 1]?.[0] === "B" &&
+      currRow - 1 >= 0 &&
+      currCol + 1 <= 7
+    )
       squaresArr.push(`${currRow - 1}-${currCol + 1}`);
-    if (board[currRow - 1][currCol - 1]?.[0] === "B")
+    if (
+      board?.[currRow - 1]?.[currCol - 1]?.[0] === "B" &&
+      currRow - 1 >= 0 &&
+      currCol - 1 >= 0
+    )
       squaresArr.push(`${currRow - 1}-${currCol - 1}`);
 
     // capturing pawnDiagonal - only to check KINGs moves and checkmate
-    if (pawnDiagonal) {
+    if (
+      pawnDiagonal &&
+      currRow - 1 >= 0 &&
+      currCol - 1 >= 0 &&
+      currCol + 1 <= 7
+    ) {
       squaresArr.push(`${currRow - 1}-${currCol + 1}`);
       squaresArr.push(`${currRow - 1}-${currCol - 1}`);
     }
@@ -57,23 +75,39 @@ export const pawn = (
       !pawnDiagonal
     )
       squaresArr.push(`${currRow - 2}-${currCol}`);
-
-    // pawn promotion
-    if (currRow === 0) {
-      squaresArr.push("pawn promotion");
-    }
   } else {
     // BLACK
-    if (board[currRow + 1][currCol] === null)
+    if (
+      currRow === 1 &&
+      board[2][currCol] === null &&
+      board[3][currCol] === null &&
+      !pawnDiagonal
+    )
+      squaresArr.push(`${currRow + 2}-${currCol}`);
+
+    if (board?.[currRow + 1][currCol] === null && currRow + 1 <= 7)
       squaresArr.push(`${currRow + 1}-${currCol}`);
 
-    if (board[currRow + 1][currCol - 1]?.[0] === "W")
+    if (
+      board?.[currRow + 1]?.[currCol - 1]?.[0] === "W" &&
+      currRow + 1 <= 7 &&
+      currCol - 1 >= 0
+    )
       squaresArr.push(`${currRow + 1}-${currCol - 1}`);
-    if (board[currRow + 1][currCol + 1]?.[0] === "W")
+    if (
+      board?.[currRow + 1]?.[currCol + 1]?.[0] === "W" &&
+      currRow + 1 <= 7 &&
+      currCol + 1 <= 7
+    )
       squaresArr.push(`${currRow + 1}-${currCol + 1}`);
 
     // capturing pawnDiagonal - only to check KINGs moves and checkmate
-    if (pawnDiagonal) {
+    if (
+      pawnDiagonal &&
+      currRow + 1 <= 7 &&
+      currCol - 1 >= 0 &&
+      currCol + 1 <= 7
+    ) {
       squaresArr.push(`${currRow + 1}-${currCol - 1}`);
       squaresArr.push(`${currRow + 1}-${currCol + 1}`);
     }
@@ -95,14 +129,6 @@ export const pawn = (
       squaresArr.push(`${currRow + 1}-${currCol - 1}`);
       squaresArr.push("en passant");
     }
-
-    if (
-      currRow === 1 &&
-      board[2][currCol] === null &&
-      board[3][currCol] === null &&
-      !pawnDiagonal
-    )
-      squaresArr.push(`${currRow + 2}-${currCol}`);
   }
   return squaresArr;
 };

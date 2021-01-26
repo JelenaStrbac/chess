@@ -5,7 +5,7 @@ import { pawn } from "./figures/pawn";
 import { queen } from "./figures/queen";
 import { rook } from "./figures/rook";
 
-const movements = {
+const movingFigures = {
   P: pawn,
   R: rook,
   B: bishop,
@@ -14,4 +14,4 @@ const movements = {
   K: king,
 };
 
-export default movements;
+export default movingFigures;

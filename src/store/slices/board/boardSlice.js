@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import checkField from "../../../utils/checkField";
-import { checkmate } from "../../../utils/checkmate";
-import { findAllMoves } from "../../../utils/findAllMoves";
-import movingFigures from "../../../utils/movingFigures";
-import writeNotation from "../../../utils/writeNotation";
+import { pawnSpecialMoves } from "../../../utils/figures/pawnSpecialMoves";
+import { determineCurrentFigure } from "../../../utils/gameFlowHelpers/determineCurrentFigure";
+import { determinePossibleMovesCurrFig } from "../../../utils/gameFlowHelpers/determinePossibleMovesCurrFig";
+import { isActivePlayerSelectingPiece } from "../../../utils/gameFlowHelpers/isActivePlayerSelectingPiece";
+import { isPlayerClickingSameField } from "../../../utils/gameFlowHelpers/isPlayerClickingSameField";
+import { resettingStateToInitial } from "../../../utils/gameFlowHelpers/resettingStateToInitial";
+import { writeNotation } from "../../../utils/writeNotation";
 
 export const initialState = {
   board: [
@@ -18,7 +20,6 @@ export const initialState = {
   ],
   activePlayer: "W",
   activePlayerStatus: "selecting",
-  selectedField: "",
   current: {
     field: "",
     figure: "",
@@ -26,14 +27,6 @@ export const initialState = {
   possibleMoves: [],
   notation: [],
   captured: {
-    W: [],
-    B: [],
-  },
-  checkmate: {
-    W: false,
-    B: false,
-  },
-  allPossibleMoves: {
     W: [],
     B: [],
   },
@@ -50,142 +43,74 @@ const boardSlice = createSlice({
     selectAndMoveFigure: {
       reducer(state, action) {
         const { currField, currFigure } = action.payload;
-        const [currentRow, currentCol] = currField?.split("-");
 
-        const oppositePlayer = state.activePlayer === "W" ? "B" : "W";
+        // touch-move rule not applied - player select/deselect same field
+        if (isPlayerClickingSameField(state, currField)) {
+          resettingStateToInitial(state);
 
-        // touch-move rule not applied - player can determine to play with another figure
-        if (
-          state.current.field === currField &&
-          state.current.figure === currFigure
-        ) {
-          state.activePlayerStatus = "selecting";
-          state.selectedField = "";
-          state.current.field = "";
-          state.current.figure = "";
-          state.possibleMoves = [];
+          // player selects the figure (1) and clicks on wanted field to place it (2):
         } else {
-          // *** select the figure ***
+          // *** (1) selecting the figure ***
           if (
             state.activePlayerStatus === "selecting" &&
-            state.activePlayer === currFigure?.[0]
+            isActivePlayerSelectingPiece(state, currFigure)
           ) {
             state.current.field = currField;
             state.current.figure = currFigure;
-            state.selectedField = currField;
             state.activePlayerStatus = "moving";
-            // find all moves of opposite player
-            let pawnDiagonal = true;
-            state.allPossibleMoves[oppositePlayer] = findAllMoves(
-              state.board,
-              oppositePlayer,
-              state.notation,
-              pawnDiagonal
-            );
-            // check if active player KING is under checkmate
-            state.checkmate[state.activePlayer] = checkmate(
-              state.board,
-              state.activePlayer,
-              state.allPossibleMoves[oppositePlayer]
-            );
-            // determine the possible fields for selected figure only if king is not under checkmate (if yes, no possible moves - only king can move)
-            if (
-              state.checkmate[state.activePlayer] &&
-              currFigure?.[1] !== "K"
-            ) {
-              state.possibleMoves = [];
-            } else if (currFigure?.[1] === "K") {
-              state.possibleMoves = movingFigures["K"](
-                state.board,
-                state.activePlayer,
-                currentRow,
-                currentCol
-              ).filter(
-                (element) =>
-                  !state.allPossibleMoves[oppositePlayer].includes(element)
-              );
-            } else if (!state.checkmate[state.activePlayer]) {
-              state.possibleMoves = movingFigures[currFigure?.[1]](
-                state.board,
-                state.activePlayer,
-                currentRow,
-                currentCol,
-                state.notation
-              )?.filter((el) => el !== "en passant" && el !== "pawn promotion");
-            }
+
+            state.possibleMoves = determinePossibleMovesCurrFig({
+              board: state.board,
+              player: state.activePlayer,
+              currFigure: currFigure,
+              currField: currField,
+              notation: state.notation,
+            });
           }
 
-          // *** move the figure on the desired square ***
+          // *** (2) move the figure on the desired square ***
           const [currRow, currCol] = state.current.field?.split("-");
           const [wanRow, wanCol] = currField?.split("-");
 
           if (
             state.activePlayerStatus === "moving" &&
-            state.activePlayer === state.current.figure[0] &&
-            checkField(state.board, state.activePlayer, wanRow, wanCol) &&
             state.possibleMoves.includes(currField)
           ) {
             // adding captured figures
             let captured = "";
             if (state.board[wanRow][wanCol]) {
               captured = state.board[wanRow][wanCol];
-              state.captured[state.activePlayer].push(
-                state.board[wanRow][wanCol]
-              );
+              state.captured[state.activePlayer].push(captured);
             }
-            state.selectedField = `${wanRow}-${wanCol}`;
-            state.board[wanRow][wanCol] = state.current.figure;
-
-            // checking for en passant move only for pawn
-            if (
-              state.current.figure?.[1] === "P" &&
-              movingFigures[state.current.figure[1]](
-                state.board,
-                state.activePlayer,
-                currRow,
-                currCol,
-                state.notation
-              ).includes("en passant")
-            ) {
-              const numForEnPassantMoving = state.activePlayer === "W" ? 1 : -1;
-              state.captured[state.activePlayer].push(
-                state.board[Number(wanRow) + numForEnPassantMoving][wanCol]
-              );
-              state.board[Number(wanRow) + numForEnPassantMoving][
-                wanCol
-              ] = null;
-              state.board[currRow][currCol] = null;
-            } else {
-              state.board[currRow][currCol] = null;
+            // special pawn moves
+            if (determineCurrentFigure(state.current.figure) === "P") {
+              pawnSpecialMoves({
+                state: state,
+                board: state.board,
+                player: state.activePlayer,
+                currRow: currRow,
+                currCol: currCol,
+                wanRow: wanRow,
+                wanCol: wanCol,
+                notation: state.notation,
+              });
             }
-            // check for pawn promotion
-            if (
-              state.current.figure?.[1] === "P" &&
-              movingFigures[state.current.figure[1]](
-                state.board,
-                state.activePlayer,
-                currRow,
-                currCol,
-                state.notation
-              ).includes("pawn promotion")
-            ) {
-              state.board[currRow][currCol] = `${state.activePlayer}${
-                state.pawnPromotion[state.activePlayer]
-              }`;
-            }
-            // continue reseting when figure is moved
-            state.possibleMoves = [];
+            // write notation
             state.notation.push(
-              writeNotation(
-                state.current.figure,
-                wanRow,
-                wanCol,
-                captured,
-                currCol
-              )
+              writeNotation({
+                figure: determineCurrentFigure(state.current.figure),
+                r: wanRow,
+                c: wanCol,
+                captured: captured,
+                prevCol: currCol,
+              })
             );
+            state.board[wanRow][wanCol] = state.current.figure;
+            state.board[currRow][currCol] = null;
+            state.possibleMoves = [];
             state.activePlayerStatus = "selecting";
             state.activePlayer = state.activePlayer === "W" ? "B" : "W";
+            state.current.field = "";
           }
         }
       },
