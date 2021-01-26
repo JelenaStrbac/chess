@@ -1,9 +1,9 @@
-import { findAllMoves } from "../findAllMoves";
-import movingFigures from "../movingFigures";
+import { findAllMovesAllFigures } from "./findAllMovesAllFigures";
+import allMovingFiguresFns from "../figures/allMovingFiguresFns";
 import { checkIfKingIsUnderCheckmate } from "./checkIfKingIsUnderCheckmate";
-import { determineCurrentFigure } from "./determineCurrentFigure";
+import { determineCurrentFigure } from "../gameFlowHelpers/determineCurrentFigure";
 
-export const determinePossibleMovesCurrFig = ({
+export const findPossibleMovesCurrFig = ({
   board,
   player,
   currFigure,
@@ -13,7 +13,7 @@ export const determinePossibleMovesCurrFig = ({
   const [currentRow, currentCol] = currField?.split("-");
   // find all moves of opposite player
   const pawnSpecialMoves = true;
-  const allPossibleMoves = findAllMoves(
+  const allPossibleMoves = findAllMovesAllFigures(
     board,
     player,
     notation,
@@ -24,7 +24,7 @@ export const determinePossibleMovesCurrFig = ({
 
   // if figure is KING, it can move only on fields that not under attack of opposite figures
   if (determineCurrentFigure(currFigure) === "K") {
-    possibleMovesCurrFig = movingFigures["K"](
+    possibleMovesCurrFig = allMovingFiguresFns["K"](
       board,
       player,
       currentRow,
@@ -37,13 +37,11 @@ export const determinePossibleMovesCurrFig = ({
       possibleMovesCurrFig = [];
       //2) king is NOT checkmated (figure can move on its possible moves)
     } else {
-      possibleMovesCurrFig = movingFigures[determineCurrentFigure(currFigure)](
-        board,
-        player,
-        currentRow,
-        currentCol,
-        notation
-      )?.filter((el) => el !== "en passant" && el !== "pawn promotion");
+      possibleMovesCurrFig = allMovingFiguresFns[
+        determineCurrentFigure(currFigure)
+      ](board, player, currentRow, currentCol, notation)?.filter(
+        (el) => el !== "en passant" && el !== "pawn promotion"
+      );
     }
   }
   return possibleMovesCurrFig;

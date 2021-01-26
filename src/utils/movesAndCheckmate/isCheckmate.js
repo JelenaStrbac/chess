@@ -1,4 +1,4 @@
-export const checkmate = (board, player, allPossibleMoves) => {
+export const isCheckmate = (board, player, allPossibleMoves) => {
   let kingPosition = "";
 
   board.forEach((el, row) =>
@@ -8,8 +8,6 @@ export const checkmate = (board, player, allPossibleMoves) => {
       }
     })
   );
-
-  //console.log(kingPosition);
 
   return allPossibleMoves.includes(kingPosition);
 };

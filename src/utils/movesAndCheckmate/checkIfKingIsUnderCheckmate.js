@@ -1,10 +1,10 @@
-import { findAllMoves } from "../findAllMoves";
-import { checkmate } from "../checkmate";
+import { findAllMovesAllFigures } from "./findAllMovesAllFigures";
+import { isCheckmate } from "./isCheckmate";
 
 export const checkIfKingIsUnderCheckmate = (board, player, notation) => {
   // find all moves of opposite player
   const pawnSpecialMoves = true;
-  const allPossibleMoves = findAllMoves(
+  const allPossibleMoves = findAllMovesAllFigures(
     board,
     player,
     notation,
@@ -12,6 +12,6 @@ export const checkIfKingIsUnderCheckmate = (board, player, notation) => {
   );
 
   // check if active player KING is under checkmate
-  const checkmated = checkmate(board, player, allPossibleMoves);
+  const checkmated = isCheckmate(board, player, allPossibleMoves);
   return checkmated;
 };

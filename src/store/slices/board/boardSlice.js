@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { pawnSpecialMoves } from "../../../utils/figures/pawnSpecialMoves";
 import { determineCurrentFigure } from "../../../utils/gameFlowHelpers/determineCurrentFigure";
-import { determinePossibleMovesCurrFig } from "../../../utils/gameFlowHelpers/determinePossibleMovesCurrFig";
+import { findPossibleMovesCurrFig } from "../../../utils/movesAndCheckmate/findPossibleMovesCurrFig";
 import { isActivePlayerSelectingPiece } from "../../../utils/gameFlowHelpers/isActivePlayerSelectingPiece";
 import { isPlayerClickingSameField } from "../../../utils/gameFlowHelpers/isPlayerClickingSameField";
 import { resettingStateToInitial } from "../../../utils/gameFlowHelpers/resettingStateToInitial";
-import { writeNotation } from "../../../utils/writeNotation";
+import { writeNotation } from "../../../utils/gameFlowHelpers/writeNotation";
 
 export const initialState = {
   board: [
@@ -59,7 +59,7 @@ const boardSlice = createSlice({
             state.current.figure = currFigure;
             state.activePlayerStatus = "moving";
 
-            state.possibleMoves = determinePossibleMovesCurrFig({
+            state.possibleMoves = findPossibleMovesCurrFig({
               board: state.board,
               player: state.activePlayer,
               currFigure: currFigure,
