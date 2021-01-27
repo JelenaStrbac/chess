@@ -6,6 +6,7 @@ export const pawn = ({
   currentCol,
   notation,
   pawnDiagonal,
+  startFields,
 }) => {
   let squaresArr = [];
   const currRow = Number(currentRow);
@@ -47,11 +48,11 @@ export const pawn = ({
       squaresArr.push(`${currRow - 1}-${currCol + 1}`);
       squaresArr.push(`${currRow - 1}-${currCol - 1}`);
     }
-
     // en passant
     const lastMoveRow = notation?.[notation.length - 1]?.[1];
     if (
       currRow === 3 &&
+      !startFields.includes(`P-2${currCol + 1}`) &&
       board[3]?.[currCol + 1] === "BP" &&
       Number(lastMoveRow) === 5
     ) {
@@ -60,6 +61,7 @@ export const pawn = ({
     }
     if (
       currRow === 3 &&
+      !startFields.includes(`P-2${currCol - 1}`) &&
       board[3]?.[currCol - 1] === "BP" &&
       Number(lastMoveRow) === 5
     ) {
@@ -84,7 +86,6 @@ export const pawn = ({
       !pawnDiagonal
     )
       squaresArr.push(`${currRow + 2}-${currCol}`);
-
     if (board?.[currRow + 1][currCol] === null && currRow + 1 <= 7)
       squaresArr.push(`${currRow + 1}-${currCol}`);
 
@@ -115,6 +116,7 @@ export const pawn = ({
     const lastMoveRow = notation?.[notation.length - 1]?.[1];
     if (
       currRow === 4 &&
+      !startFields.includes(`P-5${currCol + 1}`) &&
       board[4]?.[currCol + 1] === "WP" &&
       Number(lastMoveRow) === 4
     ) {
@@ -123,6 +125,7 @@ export const pawn = ({
     }
     if (
       currRow === 3 &&
+      !startFields.includes(`P-5${currCol - 1}`) &&
       board[4]?.[currCol - 1] === "WP" &&
       Number(lastMoveRow) === 4
     ) {

@@ -9,19 +9,34 @@ export const pawnSpecialMoves = ({
   wanRow,
   wanCol,
   notation,
+  startFields,
 }) => {
-  const movingFigureArray = pawn(board, player, currRow, currCol, notation);
+  const movingFigureArray = pawn({
+    board,
+    player,
+    currentRow: currRow,
+    currentCol: currCol,
+    notation,
+    startFields,
+  });
 
   // en passant
   if (movingFigureArray.includes("en passant")) {
     const numForEnPassantMoving = player === "W" ? 1 : -1;
     state.captured[player].push(
-      state.board[Number(wanRow) + numForEnPassantMoving][wanCol]
+      state.board[wanRow + numForEnPassantMoving][wanCol]
     );
-    state.board[Number(wanRow) + numForEnPassantMoving][wanCol] = null;
+    state.board[wanRow + numForEnPassantMoving][wanCol] = null;
   }
   // pawn promotion
-  const movingFigureArrayTwo = pawn(board, player, wanRow, wanCol, notation);
+  const movingFigureArrayTwo = pawn({
+    board,
+    player,
+    currentRow: currRow,
+    currentCol: currCol,
+    notation,
+    startFields,
+  });
   let promote = false;
   if (movingFigureArrayTwo.includes("pawn promotion")) {
     promote = true;

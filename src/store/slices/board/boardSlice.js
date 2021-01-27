@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { pawnSpecialMoves } from "../../../utils/figures/pawnSpecialMoves";
 import { kingSpecialMoves } from "../../../utils/figures/kingSpecialMoves";
 import { determineCurrentFigure } from "../../../utils/gameFlowHelpers/determineCurrentFigure";
+import { determineRowAndCol } from "../../../utils/gameFlowHelpers/determineRowAndCol";
 import { isPlayerClickingSameField } from "../../../utils/gameFlowHelpers/isPlayerClickingSameField";
 import { isActivePlayerSelectingPiece } from "../../../utils/gameFlowHelpers/isActivePlayerSelectingPiece";
 import { resettingStateToInitial } from "../../../utils/gameFlowHelpers/resettingStateToInitial";
@@ -62,7 +63,7 @@ const boardSlice = createSlice({
             state.current.figure = currFigure;
             state.activePlayerStatus = "moving";
 
-            const [currRow, currCol] = state.current.field?.split("-");
+            const [currRow, currCol] = determineRowAndCol(state.current.field);
             const figure = determineCurrentFigure(state.current.figure);
             const arrWithAllFieldsFromFigsAreMoved = writeFieldFromWhichFigIsMoved(
               figure,
@@ -81,13 +82,15 @@ const boardSlice = createSlice({
           }
 
           // *** (2) move the figure on the desired square ***
-          const [currRow, currCol] = state.current.field
-            ?.split("-")
-            .map((el) => Number(el));
-          const [wanRow, wanCol] = currField
-            ?.split("-")
-            .map((el) => Number(el));
+          const [currRow, currCol] = determineRowAndCol(state.current.field);
+          const [wanRow, wanCol] = determineRowAndCol(currField);
+
           const figure = determineCurrentFigure(state.current.figure);
+          const arrWithAllFieldsFromFigsAreMoved = writeFieldFromWhichFigIsMoved(
+            figure,
+            currRow,
+            currCol
+          );
 
           if (
             state.activePlayerStatus === "moving" &&
@@ -97,11 +100,12 @@ const boardSlice = createSlice({
               state: state,
               board: state.board,
               player: state.activePlayer,
-              currRow: Number(currRow),
-              currCol: Number(currCol),
-              wanRow: Number(wanRow),
-              wanCol: Number(wanCol),
+              currRow,
+              currCol,
+              wanRow,
+              wanCol,
               notation: state.notation,
+              startFields: arrWithAllFieldsFromFigsAreMoved,
             };
             // special king move (castling)
             if (figure === "K") {
