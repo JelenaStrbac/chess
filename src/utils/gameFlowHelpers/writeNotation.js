@@ -6,6 +6,10 @@ export const writeNotation = ({ figure, r, c, captured, prevCol }) => {
     return `${cols[prevCol]}x${cols[c]}${rows[r]}`;
   } else if (captured && figure !== "P") {
     return `${figure}x${cols[c]}${rows[r]}`;
+  } else if (!figure && ((r === 0 && c === 0) || (r === 7 && c === 0))) {
+    return `0-0-0`;
+  } else if (!figure && ((r === 0 && c === 7) || (r === 7 && c === 7))) {
+    return `0-0`;
   }
   return `${figure !== "P" ? figure : ""}${cols[c]}${rows[r]}`;
 };

@@ -1,5 +1,5 @@
 // *** ROOK *** //
-export const rook = (board, player, currentRow, currentCol) => {
+export const rook = ({ board, player, currentRow, currentCol }) => {
   const squaresArr = [];
   const currRow = Number(currentRow);
   const currCol = Number(currentCol);

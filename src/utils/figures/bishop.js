@@ -1,5 +1,5 @@
 // *** BISHOP *** //
-export const bishop = (board, player, currentRow, currentCol) => {
+export const bishop = ({ board, player, currentRow, currentCol }) => {
   const squaresArr = [];
   const currRow = Number(currentRow);
   const currCol = Number(currentCol);

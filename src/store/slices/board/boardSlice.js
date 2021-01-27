@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 import { pawnSpecialMoves } from "../../../utils/figures/pawnSpecialMoves";
+import { kingSpecialMoves } from "../../../utils/figures/kingSpecialMoves";
 import { determineCurrentFigure } from "../../../utils/gameFlowHelpers/determineCurrentFigure";
-import { findPossibleMovesCurrFig } from "../../../utils/movesAndCheckmate/findPossibleMovesCurrFig";
-import { isActivePlayerSelectingPiece } from "../../../utils/gameFlowHelpers/isActivePlayerSelectingPiece";
 import { isPlayerClickingSameField } from "../../../utils/gameFlowHelpers/isPlayerClickingSameField";
+import { isActivePlayerSelectingPiece } from "../../../utils/gameFlowHelpers/isActivePlayerSelectingPiece";
 import { resettingStateToInitial } from "../../../utils/gameFlowHelpers/resettingStateToInitial";
+import { findPossibleMovesCurrFig } from "../../../utils/movesAndCheckmate/findPossibleMovesCurrFig";
 import { writeNotation } from "../../../utils/gameFlowHelpers/writeNotation";
+import { writeFieldFromWhichFigIsMoved } from "../../../utils/gameFlowHelpers/writeFieldFromWhichFigIsMoved";
 
 export const initialState = {
   board: [
@@ -59,48 +62,67 @@ const boardSlice = createSlice({
             state.current.figure = currFigure;
             state.activePlayerStatus = "moving";
 
+            const [currRow, currCol] = state.current.field?.split("-");
+            const figure = determineCurrentFigure(state.current.figure);
+            const arrWithAllFieldsFromFigsAreMoved = writeFieldFromWhichFigIsMoved(
+              figure,
+              currRow,
+              currCol
+            );
+
             state.possibleMoves = findPossibleMovesCurrFig({
               board: state.board,
               player: state.activePlayer,
               currFigure: currFigure,
               currField: currField,
               notation: state.notation,
+              startFields: arrWithAllFieldsFromFigsAreMoved,
             });
           }
 
           // *** (2) move the figure on the desired square ***
-          const [currRow, currCol] = state.current.field?.split("-");
-          const [wanRow, wanCol] = currField?.split("-");
+          const [currRow, currCol] = state.current.field
+            ?.split("-")
+            .map((el) => Number(el));
+          const [wanRow, wanCol] = currField
+            ?.split("-")
+            .map((el) => Number(el));
+          const figure = determineCurrentFigure(state.current.figure);
 
           if (
             state.activePlayerStatus === "moving" &&
             state.possibleMoves.includes(currField)
           ) {
+            const specialMovesArgObj = {
+              state: state,
+              board: state.board,
+              player: state.activePlayer,
+              currRow: Number(currRow),
+              currCol: Number(currCol),
+              wanRow: Number(wanRow),
+              wanCol: Number(wanCol),
+              notation: state.notation,
+            };
+            // special king move (castling)
+            if (figure === "K") {
+              kingSpecialMoves(specialMovesArgObj);
+            }
+            // special pawn moves
+            if (figure === "P") {
+              pawnSpecialMoves(specialMovesArgObj);
+            }
             // adding captured figures
             let captured = "";
             if (state.board[wanRow][wanCol]) {
               captured = state.board[wanRow][wanCol];
               state.captured[state.activePlayer].push(captured);
             }
-            // special pawn moves
-            if (determineCurrentFigure(state.current.figure) === "P") {
-              pawnSpecialMoves({
-                state: state,
-                board: state.board,
-                player: state.activePlayer,
-                currRow: currRow,
-                currCol: currCol,
-                wanRow: wanRow,
-                wanCol: wanCol,
-                notation: state.notation,
-              });
-            }
             // write notation
             state.notation.push(
               writeNotation({
-                figure: determineCurrentFigure(state.current.figure),
-                r: wanRow,
-                c: wanCol,
+                figure: figure,
+                r: Number(wanRow),
+                c: Number(wanCol),
                 captured: captured,
                 prevCol: currCol,
               })

@@ -1,11 +1,12 @@
 import allMovingFiguresFns from "../figures/allMovingFiguresFns";
 
-export const findAllMovesAllFigures = (
+export const findAllMovesAllFigures = ({
   board,
   player,
   notation,
-  pawnDiagonal
-) => {
+  pawnDiagonal,
+  startFields,
+}) => {
   const oppositePlayer = player === "W" ? "B" : "W";
 
   const allPossibleMoves = [];
@@ -13,14 +14,15 @@ export const findAllMovesAllFigures = (
     row.forEach((elem, j) => {
       if (elem !== null && elem?.[0] === oppositePlayer) {
         allPossibleMoves.push(
-          ...allMovingFiguresFns[elem?.[1]](
-            board,
-            oppositePlayer,
-            i,
-            j,
-            notation,
-            pawnDiagonal
-          )
+          ...allMovingFiguresFns[elem?.[1]]({
+            board: board,
+            player: oppositePlayer,
+            currentRow: i,
+            currentCol: j,
+            notation: notation,
+            pawnDiagonal: pawnDiagonal,
+            startFields: startFields,
+          })
         );
       }
     })

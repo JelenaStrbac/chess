@@ -62,7 +62,8 @@ const Chess = () => {
                   (n) =>
                     Number(n[0]) === i &&
                     Number(n[1]) === j &&
-                    board[i][j] !== null
+                    board[i][j] !== null &&
+                    board[i][j]?.[0] !== activePlayer
                 )}
               fig={elem}
               handleClick={onClickHandler}

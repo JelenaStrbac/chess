@@ -1,5 +1,5 @@
 // *** KNIGHT *** //
-export const knight = (board, player, currentRow, currentCol) => {
+export const knight = ({ board, player, currentRow, currentCol }) => {
   const squaresArr = [];
   const currRow = Number(currentRow);
   const currCol = Number(currentCol);

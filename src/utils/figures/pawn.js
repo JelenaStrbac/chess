@@ -1,12 +1,12 @@
 // *** PAWN *** //
-export const pawn = (
+export const pawn = ({
   board,
   player,
   currentRow,
   currentCol,
   notation,
-  pawnDiagonal
-) => {
+  pawnDiagonal,
+}) => {
   let squaresArr = [];
   const currRow = Number(currentRow);
   const currCol = Number(currentCol);
