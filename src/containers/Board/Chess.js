@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
-import Square from "../components/Square";
-import { selectAndMoveFigure } from "../store/slices/board/boardSlice";
-import Player from "../components/Player";
+import Square from "../../components/Board/Square";
+import { selectAndMoveFigure } from "../../store/slices/board/boardSlice";
+import Player from "../../components/Board/Player";
 //import PawnPromotion from "../components/PawnPromotion";
 
 const Chess = () => {

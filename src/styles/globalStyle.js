@@ -10,9 +10,13 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     color: white;
+    font-size: 16px;
   }
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
       monospace;
+  }
+  a {
+    text-decoration: none;
   }
 `;

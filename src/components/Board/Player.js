@@ -1,17 +1,17 @@
 import styled from "styled-components";
 
-import BB from "../assets/img/BB.png";
-import BK from "../assets/img/BK.png";
-import BN from "../assets/img/BN.png";
-import BP from "../assets/img/BP.png";
-import BQ from "../assets/img/BQ.png";
-import BR from "../assets/img/BR.png";
-import WB from "../assets/img/WB.png";
-import WK from "../assets/img/WK.png";
-import WN from "../assets/img/WN.png";
-import WP from "../assets/img/WP.png";
-import WQ from "../assets/img/WQ.png";
-import WR from "../assets/img/WR.png";
+import BB from "../../assets/img/BB.png";
+import BK from "../../assets/img/BK.png";
+import BN from "../../assets/img/BN.png";
+import BP from "../../assets/img/BP.png";
+import BQ from "../../assets/img/BQ.png";
+import BR from "../../assets/img/BR.png";
+import WB from "../../assets/img/WB.png";
+import WK from "../../assets/img/WK.png";
+import WN from "../../assets/img/WN.png";
+import WP from "../../assets/img/WP.png";
+import WQ from "../../assets/img/WQ.png";
+import WR from "../../assets/img/WR.png";
 
 const figures = {
   BB: BB,

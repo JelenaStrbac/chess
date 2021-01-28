@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
-import { promotePawnTo } from "../store/slices/board/boardSlice";
+import { promotePawnTo } from "../../store/slices/board/boardSlice";
 
 const PawnPromotion = (props) => {
   const dispatch = useDispatch();
