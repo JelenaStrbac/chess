@@ -32,7 +32,7 @@ const Player = (props) => {
   return (
     <PlayerContainer>
       <Title color={props.color} activePlayer={props.activePlayer}>
-        {props.children} player
+        {props.children} player: {props.name}
       </Title>
       <Box>
         <MiniTitle>Moves</MiniTitle>

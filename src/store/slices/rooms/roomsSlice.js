@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { database } from "../../../services/firebase";
+import { generateRandomPlayerColor } from "../../../utils/createGameHelpers/generateRandomPlayerColor";
 import { generateRoomNum } from "../../../utils/createGameHelpers/generateRoomNum";
 
 export const createRoom = createAsyncThunk(
@@ -7,36 +8,56 @@ export const createRoom = createAsyncThunk(
   async (name, store) => {
     const game = store.getState().game;
     const roomID = generateRoomNum();
+    const playerColorOne = generateRandomPlayerColor();
 
     const room = {
       game,
-      playerOne: name,
+      playerOne: {
+        name,
+        color: playerColorOne,
+      },
       status: "loading",
     };
 
     await database.ref("rooms/" + roomID).set(room);
 
-    return roomID;
+    return { roomID, name, playerColorOne };
   }
 );
 
 export const joinRoom = createAsyncThunk(
   "rooms/joinToRoom",
   async ({ roomID, name }) => {
+    let playerColorOne;
+
+    await database
+      .ref("rooms/" + roomID + "/playerOne")
+      .once("value")
+      .then((snapshot) => {
+        playerColorOne = snapshot.val().color;
+      });
+
+    const playerColorTwo = playerColorOne === "W" ? "B" : "W";
+
     const updates = {
-      playerTwo: name,
+      playerTwo: {
+        name,
+        color: playerColorTwo,
+      },
       status: "started",
     };
 
-    await database.ref("rooms/" + roomID).update(updates);
+    database.ref("rooms/" + roomID).update(updates);
 
-    return roomID;
+    return { roomID, name, playerColorTwo };
   }
 );
 
 const initialState = {
   roomID: null,
   status: null,
+  color: null,
+  name: null,
 };
 
 const roomsSlice = createSlice({
@@ -53,8 +74,10 @@ const roomsSlice = createSlice({
         state.status = "pending";
       })
       .addCase(createRoom.fulfilled, (state, action) => {
-        const roomID = action.payload;
-        state.roomID = roomID;
+        const obj = action.payload;
+        state.roomID = obj.roomID;
+        state.name = obj.name;
+        state.color = obj.playerColorOne;
         state.status = "loading";
       })
       .addCase(createRoom.rejected, (state, action) => {
@@ -64,8 +87,10 @@ const roomsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(joinRoom.fulfilled, (state, action) => {
-        const roomID = action.payload;
-        state.roomID = roomID;
+        const obj = action.payload;
+        state.roomID = obj.roomID;
+        state.name = obj.name;
+        state.color = obj.playerColorTwo;
         state.status = "started";
       })
       .addCase(joinRoom.rejected, (state, action) => {

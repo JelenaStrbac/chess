@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Square from "../../components/Board/Square";
 import { selectAndMoveFigure } from "../../store/slices/board/boardSlice";
@@ -27,7 +27,27 @@ const Chess = () => {
 
   const { status } = useSelector((state) => state.room);
   const { roomID } = useSelector((state) => state.room);
+  const { color } = useSelector((state) => state.room);
   const { game } = useSelector((state) => state);
+
+  const [playerOne, setPlayerOne] = useState("");
+  const [playerTwo, setPlayerTwo] = useState("");
+
+  useEffect(() => {
+    database
+      .ref("rooms/" + roomID + "/playerOne")
+      .once("value")
+      .then((snapshot) => {
+        setPlayerOne(snapshot.val() || "Anonymous");
+      });
+
+    database
+      .ref("rooms/" + roomID + "/playerTwo")
+      .once("value")
+      .then((snapshot) => {
+        setPlayerTwo(snapshot.val() || "Anonymous");
+      });
+  }, [roomID]);
 
   useEffect(() => {
     let gameRef;
@@ -55,7 +75,9 @@ const Chess = () => {
     const currTargetedField = e.target.id;
     const currTargetedFigure = e.target.name;
 
-    dispatch(selectAndMoveFigure(currTargetedField, currTargetedFigure));
+    if (activePlayer === color) {
+      dispatch(selectAndMoveFigure(currTargetedField, currTargetedFigure));
+    }
   };
 
   return (
@@ -65,6 +87,7 @@ const Chess = () => {
         activePlayer={activePlayer}
         capturedFigures={captured?.["W"]}
         notation={notationWhite}
+        name={playerOne.color === "W" ? playerOne.name : playerTwo.name}
       >
         WHITE
       </Player>
@@ -106,6 +129,7 @@ const Chess = () => {
         activePlayer={activePlayer}
         capturedFigures={captured?.["B"]}
         notation={notationBlack}
+        name={playerOne.color === "B" ? playerOne.name : playerTwo.name}
       >
         BLACK
       </Player>
