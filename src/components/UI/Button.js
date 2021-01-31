@@ -2,11 +2,13 @@ import styled from "styled-components";
 
 const Button = (props) => {
   return (
-    <ButtonStyled isDisabled={props.isDisabled}>{props.children}</ButtonStyled>
+    <ButtonStyled type="submit" isDisabled={props.isDisabled}>
+      {props.children}
+    </ButtonStyled>
   );
 };
 
-const ButtonStyled = styled.div`
+const ButtonStyled = styled.button`
   background-image: linear-gradient(to right, #d18b47, #b7722e);
   color: white;
   text-decoration: none;

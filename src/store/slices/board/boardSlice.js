@@ -149,9 +149,28 @@ const boardSlice = createSlice({
     promotePawnTo(state, action) {
       state.pawnPromotion[state.activePlayer] = action.payload;
     },
+    addUpdatedGame(state, action) {
+      if (action.payload) {
+        state.board = action.payload.board;
+        state.activePlayer = action.payload.activePlayer;
+        state.activePlayerStatus = action.payload.activePlayerStatus;
+        state.current.field = action.payload.current.field;
+        state.current.figure = action.payload.current.figure;
+        state.possibleMoves = action.payload.possibleMoves;
+        state.notation = action.payload.notation;
+        state.captured["W"] = action.payload.captured["W"];
+        state.captured["B"] = action.payload.captured["B"];
+        state.pawnPromotion["W"] = action.payload.pawnPromotion["W"];
+        state.pawnPromotion["B"] = action.payload.pawnPromotion["B"];
+      }
+    },
   },
 });
 
-export const { selectAndMoveFigure, promotePawnTo } = boardSlice.actions;
+export const {
+  selectAndMoveFigure,
+  promotePawnTo,
+  addUpdatedGame,
+} = boardSlice.actions;
 
 export default boardSlice.reducer;

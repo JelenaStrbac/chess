@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 import Square from "../../components/Board/Square";
 import { selectAndMoveFigure } from "../../store/slices/board/boardSlice";
+import { addUpdatedGame } from "../../store/slices/board/boardSlice";
 import Player from "../../components/Board/Player";
 //import PawnPromotion from "../components/PawnPromotion";
+import { database } from "../../services/firebase";
 
 const Chess = () => {
   const dispatch = useDispatch();
@@ -17,10 +20,36 @@ const Chess = () => {
   const [row, column] = field?.split("-");
 
   const { notation } = useSelector((state) => state.game);
-  const notationWhite = notation.filter((el, i) => i % 2 === 0);
-  const notationBlack = notation.filter((el, i) => i % 2 !== 0);
+  const notationWhite = notation?.filter((el, i) => i % 2 === 0);
+  const notationBlack = notation?.filter((el, i) => i % 2 !== 0);
 
   const { captured } = useSelector((state) => state.game);
+
+  const { status } = useSelector((state) => state.room);
+  const { roomID } = useSelector((state) => state.room);
+  const { game } = useSelector((state) => state);
+
+  useEffect(() => {
+    let gameRef;
+
+    gameRef = database.ref("rooms/" + roomID + "/game");
+    gameRef.on("value", (snapshot) => {
+      const data = snapshot.val();
+      const gameObj = JSON.parse(data);
+
+      dispatch(addUpdatedGame(gameObj));
+    });
+
+    return () => gameRef && gameRef.off();
+  }, [status, roomID, dispatch]);
+
+  useEffect(() => {
+    const gameJSON = JSON.stringify(game);
+
+    if (status === "started") {
+      database.ref("rooms/" + roomID + "/game").set(gameJSON);
+    }
+  }, [game, roomID, status]);
 
   const onClickHandler = (e) => {
     const currTargetedField = e.target.id;
@@ -41,7 +70,7 @@ const Chess = () => {
       </Player>
 
       <ChessBoardContainer>
-        {board.map((el, i) =>
+        {board?.map((el, i) =>
           el.map((elem, j) => (
             <Square
               key={`${i}-${j}`}
@@ -54,10 +83,10 @@ const Chess = () => {
                   : "black"
               }
               possibleMove={possibleMoves
-                .map((element) => element.split("-"))
+                ?.map((element) => element.split("-"))
                 .some((n) => Number(n[0]) === i && Number(n[1]) === j)}
               capturedFigures={possibleMoves
-                .map((element) => element.split("-"))
+                ?.map((element) => element.split("-"))
                 .some(
                   (n) =>
                     Number(n[0]) === i &&
