@@ -12,12 +12,12 @@ const PawnPromotion = (props) => {
   };
   return (
     <Container>
-      <label htmlFor="promotion">Pawn promotion to:</label>
+      <label htmlFor="promotion">Pawn promotion</label>
 
       <select
         name="promotion"
         id="promotion"
-        value={pawnPromotion["W"]}
+        value={pawnPromotion[props.color]}
         onChange={onChangeHandler}
       >
         <option value="Q">Queen</option>

@@ -36,6 +36,7 @@ const Square = (props) => {
       color={props.color}
       onClick={props.handleClick}
       active={props.active}
+      isBlack={props.isBlack}
     >
       {props.fig ? (
         <img
@@ -71,6 +72,7 @@ const SquareContainer = styled.div`
   align-items: center;
   cursor: ${(props) => (props.active ? "not-allowed" : "pointer")};
   position: relative;
+  transform: ${(props) => (props.isBlack ? "rotate(180deg)" : "")};
 `;
 
 const Circle = styled.div`

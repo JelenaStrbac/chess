@@ -30,12 +30,13 @@ const figures = {
 
 const Player = (props) => {
   return (
-    <PlayerContainer>
-      <Title color={props.color} activePlayer={props.activePlayer}>
-        {props.children} player: {props.name}
-      </Title>
-      <Box>
-        <MiniTitle>Moves</MiniTitle>
+    <PlayerContainer rotate={props.rotate} color={props.color}>
+      <Box
+        rotate={props.rotate}
+        color={props.color}
+        activePlayer={props.activePlayer}
+      >
+        <MiniTitle color={props.color}>Moves</MiniTitle>
         <Table>
           <tbody>
             {props.notation?.map((el, i) => (
@@ -47,8 +48,13 @@ const Player = (props) => {
           </tbody>
         </Table>
       </Box>
-      <Box>
-        <MiniTitle>Captured pieces</MiniTitle>
+
+      <Box
+        rotate={props.rotate}
+        color={props.color}
+        activePlayer={props.activePlayer}
+      >
+        <MiniTitle color={props.color}>Captured pieces</MiniTitle>
         <div>
           {props.capturedFigures?.map((el, i) => (
             <img
@@ -61,54 +67,133 @@ const Player = (props) => {
           ))}
         </div>
       </Box>
-      <BoxTimer>10:00</BoxTimer>
+      {/* <BoxTimer>10:00</BoxTimer> */}
+
+      <MenuStyled
+        rotate={props.rotate}
+        color={props.color}
+        activePlayer={props.activePlayer}
+      >
+        <Title color={props.color} activePlayer={props.activePlayer}>
+          {props.name}
+        </Title>
+        {props.children}
+      </MenuStyled>
     </PlayerContainer>
   );
 };
 
 const PlayerContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${(props) => (props.rotate ? "column-reverse" : "column")};
+  align-items: ${(props) => (props.rotate ? "flex-end" : "flex-start")};
+  color: ${(props) => (props.color === "W" ? "white" : "black")};
+`;
+
+const MenuStyled = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  margin: 0.3rem 0;
+  width: 600px;
+  border: ${(props) =>
+    props.color === "W"
+      ? "solid 1px rgba(255, 255, 255, 0.25)"
+      : "solid 1px rgba(0, 0, 0, 0.25)"};
+  flex-direction: ${(props) => (props.rotate ? "row-reverse" : "row")};
+  background-color: ${(props) =>
+    props.color === "W"
+      ? props.activePlayer === "W"
+        ? "rgba(250, 250, 250, 0.3)"
+        : "rgba(255, 255, 255, 0.1)"
+      : props.activePlayer === "B"
+      ? "rgba(0, 0, 0, 0.3)"
+      : "rgba(0, 0, 0, 0.1)"};
+  box-shadow: ${(props) =>
+    props.color === "W"
+      ? props.activePlayer === "W"
+        ? "0px 0px 20px rgba(250, 250, 250, 0.3)"
+        : "none"
+      : props.activePlayer === "B"
+      ? "0px 15px 20px rgba(0, 0, 0, 0.3)"
+      : "none"};
 `;
 
 const Title = styled.div`
   color: ${(props) =>
-    props.color === "white"
+    props.color === "W"
       ? props.activePlayer === "W"
         ? "white"
         : "rgba(255, 255, 255, 0.3)"
       : props.activePlayer === "B"
       ? "black"
       : "rgba(0, 0, 0, 0.3)"};
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
 `;
 
 const MiniTitle = styled.div`
   margin-bottom: 0.5rem;
   padding: 0.5rem;
-  border-bottom: 1px solid #7a7876;
+  border-bottom: ${(props) =>
+    props.color === "W"
+      ? "solid 1px rgba(255, 255, 255, 0.25)"
+      : "solid 1px rgba(0, 0, 0, 0.25)"};
 `;
 
 const Box = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 0.5rem;
+  margin: 0.3rem 0;
   font-weight: bold;
-  background-color: rgba(39, 37, 34, 0.3);
-  border: 3px double #7a7876;
-  min-height: 200px;
+  width: 300px;
+  min-height: 100px;
+  max-height: 200px;
+  overflow: scroll;
+  color: ${(props) =>
+    props.color === "W"
+      ? props.activePlayer === "W"
+        ? "white"
+        : "rgba(255, 255, 255, 0.3)"
+      : props.activePlayer === "B"
+      ? "black"
+      : "rgba(0, 0, 0, 0.3)"};
+  border: ${(props) =>
+    props.color === "W"
+      ? "solid 1px rgba(255, 255, 255, 0.25)"
+      : "solid 1px rgba(0, 0, 0, 0.25)"};
+
+  background-color: ${(props) =>
+    props.color === "W"
+      ? props.activePlayer === "W"
+        ? "rgba(250, 250, 250, 0.3)"
+        : "rgba(255, 255, 255, 0.1)"
+      : props.activePlayer === "B"
+      ? "rgba(0, 0, 0, 0.3)"
+      : "rgba(0, 0, 0, 0.1)"};
+
+  box-shadow: ${(props) =>
+    props.color === "W"
+      ? props.activePlayer === "W"
+        ? "0px 0px 20px rgba(250, 250, 250, 0.3)"
+        : "none"
+      : props.activePlayer === "B"
+      ? "0px 15px 20px rgba(0, 0, 0, 0.3)"
+      : "none"};
+
+  text-align: ${(props) => (props.rotate ? "right" : "left")};
 `;
 
-const BoxTimer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  font-weight: bold;
-  background-color: #272522;
-  border: 3px double #7a7876;
-`;
+// const BoxTimer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   padding: 0.5rem;
+//   margin-top: 0.5rem;
+//   font-weight: bold;
+//   background-color: #272522;
+//   border: 3px double #7a7876;
+// `;
 
 const Table = styled.table`
   width: max-content;
