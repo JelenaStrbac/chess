@@ -15,3 +15,4 @@ export const flag = (color, size) =>
   changeIcon(<GiFlyingFlag />, color, "20px");
 export const hands = (color, size) =>
   changeIcon(<GiShakingHands />, color, "20px");
+export const chessIcon = changeIcon(<GiEmptyChessboard />, "white", "40px");
