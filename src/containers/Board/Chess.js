@@ -3,11 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import Square from "../../components/Board/Square";
-import { selectAndMoveFigure } from "../../store/slices/board/boardSlice";
+import {
+  gameEnd,
+  selectAndMoveFigure,
+} from "../../store/slices/board/boardSlice";
 import { addUpdatedGame } from "../../store/slices/board/boardSlice";
 import Player from "../../components/Board/Player";
 import { database } from "../../services/firebase";
 import Menu from "../../components/Board/Menu";
+import useModal from "../../hooks/useModal";
+import Modal from "../../components/UI/Modal";
 
 const Chess = () => {
   const dispatch = useDispatch();
@@ -25,6 +30,10 @@ const Chess = () => {
 
   const { captured } = useSelector((state) => state.game);
 
+  const { end } = useSelector((state) => state.game);
+  const { isGameEnded } = end;
+  const { isShowing, toggle } = useModal();
+
   const { status } = useSelector((state) => state.room);
   const { roomID } = useSelector((state) => state.room);
   const { game } = useSelector((state) => state);
@@ -34,6 +43,7 @@ const Chess = () => {
   const [playerOne, setPlayerOne] = useState("");
   const [playerTwo, setPlayerTwo] = useState("");
 
+  // read once players names from database
   useEffect(() => {
     database
       .ref("rooms/" + roomID + "/playerOne")
@@ -50,6 +60,7 @@ const Chess = () => {
       });
   }, [roomID]);
 
+  // listen all changes in game obj from firebase and dispatch action to update game obj in redux store
   useEffect(() => {
     let gameRef;
 
@@ -64,20 +75,43 @@ const Chess = () => {
     return () => gameRef && gameRef.off();
   }, [status, roomID, dispatch]);
 
+  // after all changes from players side on game obj, set it to firebase
   useEffect(() => {
     const gameJSON = JSON.stringify(game);
 
     if (status === "started") {
       database.ref("rooms/" + roomID + "/game").set(gameJSON);
     }
+    console.log(game);
   }, [game, roomID, status]);
 
+  // open modal when isGameEnded is changed
+  useEffect(() => {
+    if (isGameEnded) {
+      toggle();
+    }
+  }, [isGameEnded, toggle]);
+
+  // on click dispatch actions in redux store to SELECT and MOVE figure (only allowed for active player)
   const onClickHandler = (e) => {
     const currTargetedField = e.target.id;
     const currTargetedFigure = e.target.name;
 
     if (activePlayer === color) {
       dispatch(selectAndMoveFigure(currTargetedField, currTargetedFigure));
+    }
+  };
+
+  // handle draw/resign => dispatch action to update redux store
+  const handleDraw = () => {
+    if (activePlayer === color) {
+      dispatch(gameEnd("draw"));
+    }
+  };
+
+  const handleResign = () => {
+    if (activePlayer === color) {
+      dispatch(gameEnd("resign"));
     }
   };
 
@@ -91,7 +125,7 @@ const Chess = () => {
           notation={color === "W" ? notationWhite : notationBlack}
           name={playerOne.color === color ? playerOne.name : playerTwo.name}
         >
-          <Menu color={color} />
+          <Menu color={color} draw={handleDraw} resign={handleResign} />
         </Player>
       </PlayerOne>
 
@@ -140,6 +174,11 @@ const Chess = () => {
           }
         ></Player>
       </PlayerTwo>
+
+      <Modal isShowing={isShowing} hide={toggle}>
+        <h2>Game end</h2>
+        <div>{end.howIsGameEnded}</div>
+      </Modal>
     </Container>
   );
 };
@@ -158,6 +197,7 @@ const ChessBoardContainer = styled.div`
   grid-auto-rows: 1fr;
   justify-content: space-evenly;
   margin: 30px;
+  z-index: 1000;
   transform: ${(props) => (props.isBlack ? "rotate(180deg)" : "")};
 `;
 
@@ -165,12 +205,14 @@ const PlayerOne = styled.div`
   position: absolute;
   bottom: 2rem;
   left: 2rem;
+  z-index: 10;
 `;
 
 const PlayerTwo = styled.div`
   position: absolute;
   top: 2rem;
   right: 2rem;
+  z-index: 10;
 `;
 
 export default Chess;

@@ -38,6 +38,10 @@ export const initialState = {
     W: "Q",
     B: "Q",
   },
+  end: {
+    isGameEnded: false,
+    howIsGameEnded: "", // checkmate, draw, resign
+  },
 };
 
 const boardSlice = createSlice({
@@ -78,6 +82,8 @@ const boardSlice = createSlice({
               currField: currField,
               notation: state.notation,
               startFields: arrWithAllFieldsFromFigsAreMoved,
+              isGameEnded: state.end.isGameEnded,
+              state,
             });
           }
 
@@ -149,6 +155,12 @@ const boardSlice = createSlice({
     promotePawnTo(state, action) {
       state.pawnPromotion[state.activePlayer] = action.payload;
     },
+    gameEnd(state, action) {
+      if (!state.end.isGameEnded) {
+        state.end.isGameEnded = true;
+        state.end.howIsGameEnded = action.payload;
+      }
+    },
     addUpdatedGame(state, action) {
       if (action.payload) {
         state.board = action.payload.board;
@@ -162,6 +174,8 @@ const boardSlice = createSlice({
         state.captured["B"] = action.payload.captured["B"];
         state.pawnPromotion["W"] = action.payload.pawnPromotion["W"];
         state.pawnPromotion["B"] = action.payload.pawnPromotion["B"];
+        state.end.isGameEnded = action.payload.end.isGameEnded;
+        state.end.howIsGameEnded = action.payload.end.howIsGameEnded;
       }
     },
   },
@@ -170,6 +184,7 @@ const boardSlice = createSlice({
 export const {
   selectAndMoveFigure,
   promotePawnTo,
+  gameEnd,
   addUpdatedGame,
 } = boardSlice.actions;
 

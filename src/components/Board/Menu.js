@@ -3,16 +3,12 @@ import styled from "styled-components";
 import { flag, hands } from "../UI/Icons";
 
 const Menu = (props) => {
-  const handleDraw = (e) => {};
-
-  const handleResign = (e) => {};
-
   return (
     <Container>
-      <Control onClick={handleDraw}>
+      <Control onClick={props.draw}>
         {hands(props.color === "W" ? "white" : "black")} draw
       </Control>
-      <Control onClick={handleResign}>
+      <Control onClick={props.resign}>
         {flag(props.color === "W" ? "white" : "black")}resign
       </Control>
     </Container>

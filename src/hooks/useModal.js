@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const useModal = () => {
   const [isShowing, setIsShowing] = useState(false);
 
-  const toggle = () => {
-    setIsShowing(!isShowing);
-  };
+  const toggle = useCallback(() => {
+    setIsShowing((previousValue) => !previousValue);
+  }, [setIsShowing]);
 
   return {
     isShowing,

@@ -9,7 +9,6 @@ import Button from "../../components/UI/Button";
 import Spinner from "../../components/UI/Spinner";
 import Error from "../../components/UI/Error";
 import Chess from "../Board/Chess";
-//import Modal from "../../components/UI/Modal";
 import useModal from "../../hooks/useModal";
 import ModalRoomId from "../../components/UI/ModalsTexts/ModalRoomId";
 
@@ -88,17 +87,6 @@ const CreateGame = () => {
       </FormStyled>
     </Container>
   );
-
-  // const modal = (
-  //   <Modal isShowing={isShowing} hide={toggle}>
-  //     <h2>Invite your friend</h2>
-  //     <span>{roomID}</span>
-  //     <div>
-  //       Share the secret key above with your friend, so he can join this game!
-  //     </div>
-  //     <Button>GOT IT</Button>
-  //   </Modal>
-  // );
 
   if (status === "loading") {
     renderComponent = (

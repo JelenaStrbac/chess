@@ -10,6 +10,8 @@ export const findPossibleMovesCurrFig = ({
   currField,
   notation,
   startFields,
+  isGameEnded,
+  state,
 }) => {
   const [currentRow, currentCol] = currField?.split("-");
   const figure = determineCurrentFigure(currFigure);
@@ -36,6 +38,12 @@ export const findPossibleMovesCurrFig = ({
       notation: notation,
       startFields: startFields,
     }).filter((element) => !allPossibleMoves.includes(element));
+
+    // KING in check => GAME END
+    if (possibleMovesCurrFig.length === 0 && !isGameEnded) {
+      state.end.isGameEnded = true;
+      state.end.howIsGameEnded = "checkmate";
+    }
 
     // if is OTHER figure => two possibilites:
   } else {
