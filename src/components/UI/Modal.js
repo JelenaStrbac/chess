@@ -64,9 +64,11 @@ const ModalMain = styled.div`
   background: white;
   position: relative;
   margin: 30px auto;
-  border-radius: 3px;
+  // border-radius: 3px;
   max-width: 500px;
-  padding: 2rem;
+  min-width: 400px;
+  padding: 1rem 0;
+  //padding: 1rem 1rem 0 1rem;
 `;
 
 const ModalHeader = styled.div`
@@ -81,6 +83,9 @@ const ModalBody = styled.div`
   align-items: center;
   text-align: center;
   color: black;
+  position: relative;
+  height: 100%;
+  width: 100%;
 `;
 
 const StyledButton = styled.button`
@@ -91,6 +96,7 @@ const StyledButton = styled.button`
   opacity: 0.3;
   cursor: pointer;
   border: none;
+  padding-right: 1rem;
 `;
 
 export default Modal;

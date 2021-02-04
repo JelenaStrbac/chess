@@ -7,6 +7,7 @@ import { determineRowAndCol } from "../../../utils/gameFlowHelpers/determineRowA
 import { isPlayerClickingSameField } from "../../../utils/gameFlowHelpers/isPlayerClickingSameField";
 import { isActivePlayerSelectingPiece } from "../../../utils/gameFlowHelpers/isActivePlayerSelectingPiece";
 import { resettingStateToInitial } from "../../../utils/gameFlowHelpers/resettingStateToInitial";
+import { resetStateForRematch } from "../../../utils/gameFlowHelpers/resetStateForRematch";
 import { findPossibleMovesCurrFig } from "../../../utils/movesAndCheckmate/findPossibleMovesCurrFig";
 import { writeNotation } from "../../../utils/gameFlowHelpers/writeNotation";
 import { writeFieldFromWhichFigIsMoved } from "../../../utils/gameFlowHelpers/writeFieldFromWhichFigIsMoved";
@@ -41,6 +42,9 @@ export const initialState = {
   end: {
     isGameEnded: false,
     howIsGameEnded: "", // checkmate, draw, resign
+    winner: "",
+    loser: "",
+    isRematch: false,
   },
 };
 
@@ -50,6 +54,8 @@ const boardSlice = createSlice({
   reducers: {
     selectAndMoveFigure: {
       reducer(state, action) {
+        state.end.isRematch = false;
+
         const { currField, currFigure } = action.payload;
 
         // touch-move rule not applied - player select/deselect same field
@@ -155,11 +161,24 @@ const boardSlice = createSlice({
     promotePawnTo(state, action) {
       state.pawnPromotion[state.activePlayer] = action.payload;
     },
-    gameEnd(state, action) {
-      if (!state.end.isGameEnded) {
-        state.end.isGameEnded = true;
-        state.end.howIsGameEnded = action.payload;
-      }
+    gameEnd: {
+      reducer(state, action) {
+        const { howIsGameEnded, winner, loser } = action.payload;
+        if (!state.end.isGameEnded) {
+          state.end.isGameEnded = true;
+          state.end.howIsGameEnded = howIsGameEnded;
+          state.end.winner = winner;
+          state.end.loser = loser;
+        }
+      },
+      prepare(howIsGameEnded, winner, loser) {
+        return {
+          payload: { howIsGameEnded, winner, loser },
+        };
+      },
+    },
+    rematch(state, action) {
+      resetStateForRematch(state);
     },
     addUpdatedGame(state, action) {
       if (action.payload) {
@@ -176,6 +195,9 @@ const boardSlice = createSlice({
         state.pawnPromotion["B"] = action.payload.pawnPromotion["B"];
         state.end.isGameEnded = action.payload.end.isGameEnded;
         state.end.howIsGameEnded = action.payload.end.howIsGameEnded;
+        state.end.winner = action.payload.end.winner;
+        state.end.loser = action.payload.end.loser;
+        state.end.isRematch = action.payload.end.isRematch;
       }
     },
   },
@@ -185,6 +207,7 @@ export const {
   selectAndMoveFigure,
   promotePawnTo,
   gameEnd,
+  rematch,
   addUpdatedGame,
 } = boardSlice.actions;
 

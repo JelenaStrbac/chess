@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Square from "../../components/Board/Square";
 import {
   gameEnd,
+  rematch,
   selectAndMoveFigure,
 } from "../../store/slices/board/boardSlice";
 import { addUpdatedGame } from "../../store/slices/board/boardSlice";
@@ -13,6 +14,7 @@ import { database } from "../../services/firebase";
 import Menu from "../../components/Board/Menu";
 import useModal from "../../hooks/useModal";
 import Modal from "../../components/UI/Modal";
+import ModalWinLose from "../../components/UI/ModalsTexts/ModalWinLose";
 
 const Chess = () => {
   const dispatch = useDispatch();
@@ -32,6 +34,7 @@ const Chess = () => {
 
   const { end } = useSelector((state) => state.game);
   const { isGameEnded } = end;
+  const { isRematch } = end;
   const { isShowing, toggle } = useModal();
 
   const { status } = useSelector((state) => state.room);
@@ -92,6 +95,13 @@ const Chess = () => {
     }
   }, [isGameEnded, toggle]);
 
+  // close modal when isRematch is changed
+  useEffect(() => {
+    if (isRematch) {
+      toggle();
+    }
+  }, [isRematch, toggle]);
+
   // on click dispatch actions in redux store to SELECT and MOVE figure (only allowed for active player)
   const onClickHandler = (e) => {
     const currTargetedField = e.target.id;
@@ -105,14 +115,22 @@ const Chess = () => {
   // handle draw/resign => dispatch action to update redux store
   const handleDraw = () => {
     if (activePlayer === color) {
-      dispatch(gameEnd("draw"));
+      dispatch(gameEnd("draw", "", ""));
     }
   };
 
   const handleResign = () => {
     if (activePlayer === color) {
-      dispatch(gameEnd("resign"));
+      const loser = activePlayer;
+      const winner = activePlayer === "W" ? "B" : "W";
+
+      dispatch(gameEnd("resign", winner, loser));
     }
+  };
+
+  // handle rematch
+  const handleRematch = () => {
+    dispatch(rematch());
   };
 
   return (
@@ -177,7 +195,13 @@ const Chess = () => {
 
       <Modal isShowing={isShowing} hide={toggle}>
         <h2>Game end</h2>
-        <div>{end.howIsGameEnded}</div>
+
+        <ModalWinLose
+          handleRematch={handleRematch}
+          reason={end.howIsGameEnded}
+          winner={end.winner === color}
+          player={playerOne.color === color ? playerOne.name : playerTwo.name}
+        />
       </Modal>
     </Container>
   );
