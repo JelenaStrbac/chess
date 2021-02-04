@@ -1,6 +1,8 @@
 import { createGlobalStyle } from "styled-components";
+//import PoppinsRegular from "../assets/fonts/Poppins-Regular.ttf";
 
 export const GlobalStyle = createGlobalStyle`
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -11,6 +13,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     color: white;
     font-size: 16px;
+    font-family: Poppins, sans-serif;
   }
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

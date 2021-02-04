@@ -85,7 +85,6 @@ const Chess = () => {
     if (status === "started") {
       database.ref("rooms/" + roomID + "/game").set(gameJSON);
     }
-    console.log(game);
   }, [game, roomID, status]);
 
   // open modal when isGameEnded is changed

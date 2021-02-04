@@ -14,6 +14,8 @@ const ButtonStyled = styled.button`
   text-decoration: none;
   text-align: center;
   font-style: none;
+  font-family: Poppins;
+  min-width: 10rem;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
