@@ -11,14 +11,6 @@ import Home from "./containers/Home";
 import CreateGame from "./containers/CreateAndJoinGame/CreateGame";
 import JoinGame from "./containers/CreateAndJoinGame/JoinGame";
 
-import WebFont from "webfontloader";
-
-WebFont.load({
-  google: {
-    families: ["Poppins"],
-  },
-});
-
 const App = () => {
   return (
     <Router basename={process.env.PUBLIC_URL}>
