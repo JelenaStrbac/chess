@@ -79,16 +79,28 @@ export const pawn = ({
       squaresArr.push(`${currRow - 2}-${currCol}`);
   } else {
     // BLACK
+
+    // pawn promotion
+    if (currRow === 7) {
+      squaresArr.push("pawn promotion");
+    }
+
+    // moving pawn for the first time - allowed to move one or two fields in front if both fields are empty
     if (
       currRow === 1 &&
       board[2][currCol] === null &&
       board[3][currCol] === null &&
       !pawnDiagonal
-    )
+    ) {
       squaresArr.push(`${currRow + 2}-${currCol}`);
-    if (board?.[currRow + 1][currCol] === null && currRow + 1 <= 7)
-      squaresArr.push(`${currRow + 1}-${currCol}`);
+    }
 
+    // moving 1 field in front if that field is empty
+    if (currRow + 1 <= 7 && board?.[currRow + 1]?.[currCol] === null) {
+      squaresArr.push(`${currRow + 1}-${currCol}`);
+    }
+
+    // capturing white on diagonal
     if (
       board?.[currRow + 1]?.[currCol - 1]?.[0] === "W" &&
       currRow + 1 <= 7 &&
@@ -113,6 +125,7 @@ export const pawn = ({
       squaresArr.push(`${currRow + 1}-${currCol + 1}`);
     }
 
+    // en passant
     const lastMoveRow = notation?.[notation.length - 1]?.[1];
     if (
       currRow === 4 &&

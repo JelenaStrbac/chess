@@ -1,36 +1,38 @@
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { promotePawnTo } from "../../store/slices/board/boardSlice";
+import Square from "./Square";
 
 const PawnPromotion = (props) => {
   const dispatch = useDispatch();
-  const { pawnPromotion } = useSelector((state) => state.game);
 
-  const onChangeHandler = (e) => {
-    dispatch(promotePawnTo(e.target.value));
+  const onClickHandler = (e) => {
+    dispatch(promotePawnTo(e.target.name[1]));
   };
+
+  const arrWithFigures =
+    props.color === "W" ? ["WB", "WN", "WQ", "WR"] : ["BB", "BN", "BQ", "BR"];
+
   return (
     <Container>
-      <label htmlFor="promotion">Pawn promotion</label>
-
-      <select
-        name="promotion"
-        id="promotion"
-        value={pawnPromotion[props.color]}
-        onChange={onChangeHandler}
-      >
-        <option value="Q">Queen</option>
-        <option value="R">Rook</option>
-        <option value="N">Night</option>
-        <option value="B">Bishop</option>
-      </select>
+      {arrWithFigures.map((el, i) => (
+        <Square
+          key={el}
+          fig={el}
+          color={i % 2 === 0 ? "white" : "black"}
+          handleClick={onClickHandler}
+        ></Square>
+      ))}
     </Container>
   );
 };
 
 const Container = styled.div`
   display: flex;
+  position: absolute;
+  top: 2rem;
+  left: 10rem;
 `;
 
 export default PawnPromotion;

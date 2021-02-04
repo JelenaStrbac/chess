@@ -15,6 +15,7 @@ import Menu from "../../components/Board/Menu";
 import useModal from "../../hooks/useModal";
 import Modal from "../../components/UI/Modal";
 import ModalWinLose from "../../components/UI/ModalsTexts/ModalWinLose";
+import PawnPromotion from "../../components/Board/PawnPromotion";
 
 const Chess = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const Chess = () => {
   const notationBlack = notation?.filter((el, i) => i % 2 !== 0);
 
   const { captured } = useSelector((state) => state.game);
+  const { shouldPawnPromote } = useSelector((state) => state.game);
 
   const { end } = useSelector((state) => state.game);
   const { isGameEnded } = end;
@@ -192,6 +194,10 @@ const Chess = () => {
         ></Player>
       </PlayerTwo>
 
+      {activePlayer === color && shouldPawnPromote ? (
+        <PawnPromotion color={color} />
+      ) : null}
+
       <Modal isShowing={isShowing} hide={toggle}>
         <h2>Game end</h2>
 
@@ -212,6 +218,7 @@ const Container = styled.div`
   align-items: center;
   height: 100%;
   width: 100%;
+  position: relative;
 `;
 
 const ChessBoardContainer = styled.div`

@@ -35,6 +35,7 @@ export const initialState = {
     W: [],
     B: [],
   },
+  shouldPawnPromote: false,
   pawnPromotion: {
     W: "Q",
     B: "Q",
@@ -91,6 +92,13 @@ const boardSlice = createSlice({
               isGameEnded: state.end.isGameEnded,
               state,
             });
+
+            if (currFigure === "WP" && currRow - 1 === 0) {
+              state.shouldPawnPromote = true;
+            }
+            if (currFigure === "BP" && currRow + 1 === 7) {
+              state.shouldPawnPromote = true;
+            }
           }
 
           // *** (2) move the figure on the desired square ***
@@ -132,6 +140,9 @@ const boardSlice = createSlice({
             if (state.board[wanRow][wanCol]) {
               captured = state.board[wanRow][wanCol];
               state.captured[state.activePlayer].push(captured);
+              state.captured[state.activePlayer] = state.captured[
+                state.activePlayer
+              ].filter((el) => el !== null);
             }
             // write notation
             state.notation.push(
@@ -149,6 +160,7 @@ const boardSlice = createSlice({
             state.activePlayerStatus = "selecting";
             state.activePlayer = state.activePlayer === "W" ? "B" : "W";
             state.current.field = "";
+            state.shouldPawnPromote = false;
           }
         }
       },
@@ -191,6 +203,7 @@ const boardSlice = createSlice({
         state.notation = action.payload.notation;
         state.captured["W"] = action.payload.captured["W"];
         state.captured["B"] = action.payload.captured["B"];
+        state.shouldPawnPromote = action.payload.shouldPawnPromote;
         state.pawnPromotion["W"] = action.payload.pawnPromotion["W"];
         state.pawnPromotion["B"] = action.payload.pawnPromotion["B"];
         state.end.isGameEnded = action.payload.end.isGameEnded;
