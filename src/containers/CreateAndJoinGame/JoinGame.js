@@ -8,19 +8,36 @@ import Spinner from "../../components/UI/Spinner";
 import Error from "../../components/UI/Error";
 import { joinRoom } from "../../store/slices/rooms/roomsSlice";
 import Chess from "../Board/Chess";
+import { checkValidity } from "../../utils/createGameHelpers/checkValidity";
 
 const JoinGame = (props) => {
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.room);
 
+  const [formError, setFormError] = useState(false);
+
   const [inputForm, setInputForm] = useState({
     name: {
       value: "",
       placeholder: "Enter your name",
+      validation: {
+        required: true,
+        minLength: 2,
+        maxLength: 20,
+      },
+      message: "Name must have minimum 2 and maximum 20 characters.",
+      valid: false,
     },
     secretKey: {
       value: "",
       placeholder: "Secret key",
+      validation: {
+        required: true,
+        length: 8,
+      },
+      message:
+        "Secret key must have exactly 8 alphanumeric characters. Please try again with another secret key.",
+      valid: false,
     },
   });
 
@@ -33,7 +50,17 @@ const JoinGame = (props) => {
     updatedFormElement.value = e.target.value;
 
     updatedInputForm[inputIdentifier] = updatedFormElement;
-    // ovde uradi validaciju naknadno
+
+    // validation
+    updatedFormElement.valid = checkValidity(
+      updatedFormElement.value,
+      updatedFormElement.validation
+    );
+
+    let formIsValid = true;
+    Object.keys(updatedInputForm).forEach((el) => {
+      formIsValid = updatedInputForm[el].valid && formIsValid;
+    });
 
     setInputForm(updatedInputForm);
   };
@@ -41,12 +68,16 @@ const JoinGame = (props) => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
-    dispatch(
-      joinRoom({
-        roomID: inputForm.secretKey.value,
-        name: inputForm.name.value,
-      })
-    );
+    if (Object.keys(inputForm).every((el) => inputForm[el].valid === true)) {
+      dispatch(
+        joinRoom({
+          roomID: inputForm.secretKey.value,
+          name: inputForm.name.value,
+        })
+      );
+    } else {
+      setFormError(true);
+    }
   };
 
   const formElementsArray = [];
@@ -66,6 +97,9 @@ const JoinGame = (props) => {
             key={el.id}
             placeholder={el.config.placeholder}
             value={el.config.value}
+            formError={formError}
+            invalid={!el.config.valid}
+            message={el.config.message}
             onInputChangeHandler={(e) => onInputChangeHandler(e, el.id)}
           />
         ))}
@@ -78,7 +112,7 @@ const JoinGame = (props) => {
     renderComponent = <Spinner />;
   } else if (status === "started") {
     renderComponent = <Chess />;
-  } else if (status === "started") {
+  } else if (status === "error") {
     renderComponent = <Error />;
   }
 

@@ -11,6 +11,7 @@ import Error from "../../components/UI/Error";
 import Chess from "../Board/Chess";
 import useModal from "../../hooks/useModal";
 import ModalRoomId from "../../components/UI/ModalsTexts/ModalRoomId";
+import { checkValidity } from "../../utils/createGameHelpers/checkValidity";
 
 const CreateGame = () => {
   const dispatch = useDispatch();
@@ -19,10 +20,19 @@ const CreateGame = () => {
 
   const { isShowing, toggle } = useModal();
 
+  const [formError, setFormError] = useState(false);
+
   const [inputForm, setInputForm] = useState({
     name: {
       value: "",
       placeholder: "Enter your name",
+      validation: {
+        required: true,
+        minLength: 2,
+        maxLength: 20,
+      },
+      message: "Name must have minimum 2 and maximum 20 characters.",
+      valid: false,
     },
   });
 
@@ -51,7 +61,17 @@ const CreateGame = () => {
     updatedFormElement.value = e.target.value;
 
     updatedInputForm[inputIdentifier] = updatedFormElement;
-    // ovde uradi validaciju naknadno
+
+    // validation
+    updatedFormElement.valid = checkValidity(
+      updatedFormElement.value,
+      updatedFormElement.validation
+    );
+
+    let formIsValid = true;
+    Object.keys(updatedInputForm).forEach((el) => {
+      formIsValid = updatedInputForm[el].valid && formIsValid;
+    });
 
     setInputForm(updatedInputForm);
   };
@@ -59,8 +79,12 @@ const CreateGame = () => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
-    dispatch(createRoom(inputForm.name.value));
-    toggle();
+    if (Object.keys(inputForm).every((el) => inputForm[el].valid === true)) {
+      dispatch(createRoom(inputForm.name.value));
+      toggle();
+    } else {
+      setFormError(true);
+    }
   };
 
   const formElementsArray = [];
@@ -80,6 +104,9 @@ const CreateGame = () => {
             key={el.id}
             placeholder={el.config.placeholder}
             value={el.config.value}
+            formError={formError}
+            invalid={!el.config.valid}
+            message={el.config.message}
             onInputChangeHandler={(e) => onInputChangeHandler(e, el.id)}
           />
         ))}
