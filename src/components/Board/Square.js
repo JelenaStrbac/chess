@@ -39,9 +39,7 @@ const Square = (props) => {
       isBlack={props.isBlack}
     >
       {props.fig ? (
-        <img
-          width="80px"
-          height="80px"
+        <ImgStyled
           src={figures[props.fig]}
           id={props.field}
           name={props.fig}
@@ -73,6 +71,16 @@ const SquareContainer = styled.div`
   cursor: ${(props) => (props.active ? "not-allowed" : "pointer")};
   position: relative;
   transform: ${(props) => (props.isBlack ? "rotate(180deg)" : "")};
+
+  @media only screen and (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+  }
+
+  @media only screen and (min-width: 481px) and (max-width: 1920px) {
+    width: 60px;
+    height: 60px;
+  }
 `;
 
 const Circle = styled.div`
@@ -80,6 +88,16 @@ const Circle = styled.div`
   width: 25px;
   background: rgba(171, 216, 141, 0.4);
   border-radius: 50%;
+
+  @media only screen and (max-width: 480px) {
+    width: 15px;
+    height: 15px;
+  }
+
+  @media only screen and (min-width: 481px) and (max-width: 1920px) {
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const CapturedCircle = styled.div`
@@ -89,6 +107,33 @@ const CapturedCircle = styled.div`
   border: 8px solid rgba(171, 216, 141, 0.4);
   z-index: 100;
   position: absolute;
+
+  @media only screen and (max-width: 480px) {
+    width: 20px;
+    height: 20px;
+    border: 5px solid rgba(171, 216, 141, 0.4);
+  }
+
+  @media only screen and (min-width: 481px) and (max-width: 1920px) {
+    width: 40px;
+    height: 40px;
+    border: 7px solid rgba(171, 216, 141, 0.4);
+  }
+`;
+
+const ImgStyled = styled.img`
+  height: 80px;
+  width: 80px;
+
+  @media only screen and (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+  }
+
+  @media only screen and (min-width: 481px) and (max-width: 1920px) {
+    width: 60px;
+    height: 60px;
+  }
 `;
 
 export default Square;

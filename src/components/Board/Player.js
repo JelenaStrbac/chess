@@ -69,6 +69,12 @@ const Player = (props) => {
       </Box>
       {/* <BoxTimer>10:00</BoxTimer> */}
 
+      <CapturedMobile>
+        {props.capturedFigures?.map((el, i) => (
+          <img key={i} width="20px" height="20px" src={figures[el]} alt={el} />
+        ))}
+      </CapturedMobile>
+
       <MenuStyled
         rotate={props.rotate}
         color={props.color}
@@ -118,6 +124,20 @@ const MenuStyled = styled.div`
       : props.activePlayer === "B"
       ? "0px 15px 20px rgba(0, 0, 0, 0.3)"
       : "none"};
+
+  color: ${(props) =>
+    props.color === "W"
+      ? props.activePlayer === "W"
+        ? "white"
+        : "rgba(255, 255, 255, 0.3)"
+      : props.activePlayer === "B"
+      ? "black"
+      : "rgba(0, 0, 0, 0.3)"};
+
+  @media only screen and (max-width: 480px) {
+    max-width: 300px;
+    padding: 0.5rem;
+  }
 `;
 
 const Title = styled.div`
@@ -131,6 +151,10 @@ const Title = styled.div`
       : "rgba(0, 0, 0, 0.3)"};
   font-size: 1.5rem;
   font-weight: bold;
+
+  @media only screen and (max-width: 480px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const MiniTitle = styled.div`
@@ -140,6 +164,10 @@ const MiniTitle = styled.div`
     props.color === "W"
       ? "solid 1px rgba(255, 255, 255, 0.25)"
       : "solid 1px rgba(0, 0, 0, 0.25)"};
+
+  @media only screen and (max-width: 480px) {
+    display: none;
+  }
 `;
 
 const Box = styled.div`
@@ -183,17 +211,23 @@ const Box = styled.div`
       : "none"};
 
   text-align: ${(props) => (props.rotate ? "right" : "left")};
+
+  @media only screen and (max-width: 480px) {
+    display: none;
+  }
+
+  @media only screen and (min-width: 481px) and (max-width: 1200px) {
+    width: 200px;
+  }
 `;
 
-// const BoxTimer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   padding: 0.5rem;
-//   margin-top: 0.5rem;
-//   font-weight: bold;
-//   background-color: #272522;
-//   border: 3px double #7a7876;
-// `;
+const CapturedMobile = styled.div`
+  display: none;
+
+  @media only screen and (max-width: 480px) {
+    display: block;
+  }
+`;
 
 const Table = styled.table`
   width: max-content;

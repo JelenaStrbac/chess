@@ -16,6 +16,7 @@ import useModal from "../../hooks/useModal";
 import Modal from "../../components/UI/Modal";
 import ModalWinLose from "../../components/UI/ModalsTexts/ModalWinLose";
 import PawnPromotion from "../../components/Board/PawnPromotion";
+import Logo from "../../components/UI/Logo";
 
 const Chess = () => {
   const dispatch = useDispatch();
@@ -113,13 +114,7 @@ const Chess = () => {
     }
   };
 
-  // handle draw/resign => dispatch action to update redux store
-  const handleDraw = () => {
-    if (activePlayer === color) {
-      dispatch(gameEnd("draw", "", ""));
-    }
-  };
-
+  // handle resign => dispatch action to update redux store
   const handleResign = () => {
     if (activePlayer === color) {
       const loser = activePlayer;
@@ -144,7 +139,11 @@ const Chess = () => {
           notation={color === "W" ? notationWhite : notationBlack}
           name={playerOne.color === color ? playerOne.name : playerTwo.name}
         >
-          <Menu color={color} draw={handleDraw} resign={handleResign} />
+          <Menu
+            color={color}
+            activePlayer={activePlayer}
+            resign={handleResign}
+          />
         </Player>
       </PlayerOne>
 
@@ -194,6 +193,8 @@ const Chess = () => {
         ></Player>
       </PlayerTwo>
 
+      <Logo />
+
       {activePlayer === color && shouldPawnPromote ? (
         <PawnPromotion color={color} />
       ) : null}
@@ -219,6 +220,10 @@ const Container = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
+
+  @media only screen and (max-width: 480px) {
+    flex-direction: column-reverse;
+  }
 `;
 
 const ChessBoardContainer = styled.div`
@@ -236,6 +241,10 @@ const PlayerOne = styled.div`
   bottom: 2rem;
   left: 2rem;
   z-index: 10;
+
+  @media only screen and (max-width: 480px) {
+    position: static;
+  }
 `;
 
 const PlayerTwo = styled.div`
@@ -243,6 +252,11 @@ const PlayerTwo = styled.div`
   top: 2rem;
   right: 2rem;
   z-index: 10;
+
+  @media only screen and (max-width: 480px) {
+    position: static;
+    margin-top: 2.5rem;
+  }
 `;
 
 export default Chess;

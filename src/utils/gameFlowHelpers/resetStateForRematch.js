@@ -27,7 +27,7 @@ export const resetStateForRematch = (state) => {
   };
   state.end = {
     isGameEnded: false,
-    howIsGameEnded: "", // checkmate, draw, resign
+    howIsGameEnded: "", // checkmate, resign
     winner: "",
     loser: "",
     isRematch: true,

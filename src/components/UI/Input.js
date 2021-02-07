@@ -36,11 +36,23 @@ const InputStyled = styled.input`
   padding: 0.5rem;
   margin-top: 0.5rem;
   font-family: Poppins;
+  background-color: transparent;
+  outline: none;
+  color: white;
+  border-style: none;
+  border-bottom: 1px solid white;
+  font-size: 1.1rem;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
 `;
 
 const ErrorMessage = styled.div`
   outline: none;
   margin-top: 0.5rem;
+  padding: 0 1rem;
+  text-align: center;
   color: #000;
   font-size: 0.6rem;
 `;

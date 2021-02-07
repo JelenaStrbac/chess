@@ -1,15 +1,21 @@
 import styled from "styled-components";
 
-import { flag, hands } from "../UI/Icons";
+import { flag } from "../UI/Icons";
 
 const Menu = (props) => {
   return (
     <Container>
-      <Control onClick={props.draw}>
-        {hands(props.color === "W" ? "white" : "black")} draw
-      </Control>
       <Control onClick={props.resign}>
-        {flag(props.color === "W" ? "white" : "black")}resign
+        {flag(
+          props.color === "W"
+            ? props.activePlayer === "W"
+              ? "white"
+              : "rgba(255, 255, 255, 0.3)"
+            : props.activePlayer === "B"
+            ? "black"
+            : "rgba(0, 0, 0, 0.3)"
+        )}
+        resign
       </Control>
     </Container>
   );
@@ -26,6 +32,10 @@ const Control = styled.div`
   align-items: center;
   margin-right: 1rem;
   cursor: pointer;
+
+  @media only screen and (max-width: 480px) {
+    font-size: 0.8rem;
+  }
 `;
 
 export default Menu;

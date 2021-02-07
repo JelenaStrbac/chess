@@ -42,7 +42,7 @@ export const initialState = {
   },
   end: {
     isGameEnded: false,
-    howIsGameEnded: "", // checkmate, draw, resign
+    howIsGameEnded: "", // checkmate, resign
     winner: "",
     loser: "",
     isRematch: false,

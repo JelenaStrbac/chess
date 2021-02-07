@@ -5,7 +5,7 @@ import { chessIcon } from "../UI/Icons";
 const Spinner = (props) => {
   let renderInSpinner = (
     <Container className="Loader">
-      <Load>{chessIcon}</Load>
+      <Load>{chessIcon()}</Load>
       <div>Waiting other player to join...</div>
     </Container>
   );

@@ -64,11 +64,14 @@ const ModalMain = styled.div`
   background: white;
   position: relative;
   margin: 30px auto;
-  // border-radius: 3px;
   max-width: 500px;
   min-width: 400px;
   padding: 1rem 0;
-  //padding: 1rem 1rem 0 1rem;
+
+  @media only screen and (max-width: 480px) {
+    max-width: 320px;
+    min-width: 250px;
+  }
 `;
 
 const ModalHeader = styled.div`

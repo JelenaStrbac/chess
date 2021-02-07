@@ -9,6 +9,8 @@ import Error from "../../components/UI/Error";
 import { joinRoom } from "../../store/slices/rooms/roomsSlice";
 import Chess from "../Board/Chess";
 import { checkValidity } from "../../utils/createGameHelpers/checkValidity";
+import bckg from "../../assets/background/chess-background.png";
+import Shape from "../../components/UI/Shape";
 
 const JoinGame = (props) => {
   const dispatch = useDispatch();
@@ -90,7 +92,7 @@ const JoinGame = (props) => {
 
   let renderComponent = (
     <Container>
-      <h1>Join game</h1>
+      <h1 style={{ zIndex: 1000 }}>Join game</h1>
       <FormStyled autoComplete="off" onSubmit={onSubmitHandler}>
         {formElementsArray.map((el) => (
           <Input
@@ -105,6 +107,9 @@ const JoinGame = (props) => {
         ))}
         <Button>Join</Button>
       </FormStyled>
+      <ImgStyled src={bckg} alt="chess" />
+      <Shape width={800} height={400} remove="true" />
+      <Shape width={400} height={800} stay="true" />
     </Container>
   );
 
@@ -133,6 +138,13 @@ const FormStyled = styled.form`
   align-items: center;
   height: 100%;
   width: 100%;
+  z-index: 1000;
+`;
+
+const ImgStyled = styled.img`
+  max-width: 300px;
+  margin-top: 2rem;
+  z-index: 1000;
 `;
 
 export default JoinGame;

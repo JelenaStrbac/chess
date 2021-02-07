@@ -1,13 +1,18 @@
 import styled from "styled-components";
+import CopyTextToClipboard from "../CopyTextToClipboard";
 import Modal from "../Modal";
 
 const ModalRoomId = ({ isShowing, toggle, roomID }) => {
   return (
     <Modal isShowing={isShowing} hide={toggle}>
       <h2>Invite your friend</h2>
-      <Key>{roomID}</Key>
-      <div>
-        Share the secret key above with your friend, so he can join this game!
+      <KeyCopy>
+        <Key>{roomID}</Key>
+        <CopyTextToClipboard />
+      </KeyCopy>
+
+      <div style={{ padding: "0 2rem" }}>
+        Share the secret key above, so your friend can join this game!
       </div>
       <ButtonStyle onClick={toggle}>GOT IT</ButtonStyle>
     </Modal>
@@ -15,13 +20,20 @@ const ModalRoomId = ({ isShowing, toggle, roomID }) => {
 };
 
 const Key = styled.span`
-  padding: 1rem 2rem;
-  border-radius: 0.4rem;
-  margin-bottom: 2.5rem;
-  font-size: 1.4rem;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
   font-weight: bold;
-  background-color: #b7722e;
-  color: #e9c7a6;
+  background-color: #7433ff;
+  color: #ae88ff;
+`;
+
+const KeyCopy = styled.div`
+  display: flex;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2.5rem;
 `;
 
 const ButtonStyle = styled.button`

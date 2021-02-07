@@ -12,6 +12,8 @@ import Chess from "../Board/Chess";
 import useModal from "../../hooks/useModal";
 import ModalRoomId from "../../components/UI/ModalsTexts/ModalRoomId";
 import { checkValidity } from "../../utils/createGameHelpers/checkValidity";
+import bckg from "../../assets/background/chess-background.png";
+import Shape from "../../components/UI/Shape";
 
 const CreateGame = () => {
   const dispatch = useDispatch();
@@ -97,7 +99,7 @@ const CreateGame = () => {
 
   let renderComponent = (
     <Container>
-      <h1>Create game</h1>
+      <h1 style={{ zIndex: 1000 }}>Create game</h1>
       <FormStyled autoComplete="off" onSubmit={onSubmitHandler}>
         {formElementsArray.map((el) => (
           <Input
@@ -112,6 +114,9 @@ const CreateGame = () => {
         ))}
         <Button>Create</Button>
       </FormStyled>
+      <ImgStyled src={bckg} alt="chess" />
+      <Shape width={800} height={400} remove="true" />
+      <Shape width={400} height={800} stay="true" />
     </Container>
   );
 
@@ -144,6 +149,13 @@ const FormStyled = styled.form`
   align-items: center;
   height: 100%;
   width: 100%;
+  z-index: 1000;
+`;
+
+const ImgStyled = styled.img`
+  max-width: 300px;
+  margin-top: 2rem;
+  z-index: 1000;
 `;
 
 export default CreateGame;
