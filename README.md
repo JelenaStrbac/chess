@@ -2,7 +2,11 @@
 
 > Online multiplayer chess game.
 
-![chess app](src/assets/gifs/queen.gif)
+<div align="center" markdown="1">
+
+<img src="./src/assets/gifs/queen.gif" alt="chess queen move gif">
+
+</div>
 
 ## How it is built?
 
@@ -26,7 +30,7 @@ This app is classic implementation of a board game Chess - all rules are taken f
 </div>
 
 - Online (i.e. real-time) game for two known players;
-- Authentication is not requred - one player can easily create room and share specificly generated key to other player to join;
+- Authentication is not required - one player can easily create room and share specifically generated key to other player to join;
 - Resign option included;
 - Specific move types are supported, such as en passant, castling and pawn promotion;
 - After game end (either by checkmate or resign of opponent), players have option to take rematch.
