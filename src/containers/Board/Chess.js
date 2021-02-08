@@ -44,7 +44,7 @@ const Chess = () => {
   const { roomID } = useSelector((state) => state.room);
   const { game } = useSelector((state) => state);
   const { color } = useSelector((state) => state.room);
-  const opositeColor = color === "W" ? "B" : "W";
+  const oppositeColor = color === "W" ? "B" : "W";
 
   const [playerOne, setPlayerOne] = useState("");
   const [playerTwo, setPlayerTwo] = useState("");
@@ -183,12 +183,12 @@ const Chess = () => {
       <PlayerTwo>
         <Player
           rotate="true"
-          color={opositeColor}
+          color={oppositeColor}
           activePlayer={activePlayer}
-          capturedFigures={captured?.[opositeColor]}
+          capturedFigures={captured?.[oppositeColor]}
           notation={color !== "W" ? notationWhite : notationBlack}
           name={
-            playerOne.color === opositeColor ? playerOne.name : playerTwo.name
+            playerOne.color === oppositeColor ? playerOne.name : playerTwo.name
           }
         ></Player>
       </PlayerTwo>
