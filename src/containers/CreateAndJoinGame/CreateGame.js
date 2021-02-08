@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { createRoom, startGame } from "../../store/slices/rooms/roomsSlice";
-import { database } from "../../services/firebase";
+import { database } from "../../services/firebaseDb";
 import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 import Spinner from "../../components/UI/Spinner";

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { database } from "../../../services/firebase";
+import { database } from "../../../services/firebaseDb";
 import { generateRandomPlayerColor } from "../../../utils/createGameHelpers/generateRandomPlayerColor";
 import { generateRoomNum } from "../../../utils/createGameHelpers/generateRoomNum";
 

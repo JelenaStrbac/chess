@@ -10,7 +10,7 @@ import {
 } from "../../store/slices/board/boardSlice";
 import { addUpdatedGame } from "../../store/slices/board/boardSlice";
 import Player from "../../components/Board/Player";
-import { database } from "../../services/firebase";
+import { database } from "../../services/firebaseDb";
 import Menu from "../../components/Board/Menu";
 import useModal from "../../hooks/useModal";
 import Modal from "../../components/UI/Modal";
