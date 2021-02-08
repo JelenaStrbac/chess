@@ -192,6 +192,9 @@ const boardSlice = createSlice({
     rematch(state, action) {
       resetStateForRematch(state);
     },
+    resetGame(state, action) {
+      resetStateForRematch(state);
+    },
     addUpdatedGame(state, action) {
       if (action.payload) {
         state.board = action.payload.board;
@@ -221,6 +224,7 @@ export const {
   promotePawnTo,
   gameEnd,
   rematch,
+  resetGame,
   addUpdatedGame,
 } = boardSlice.actions;
 

@@ -4,9 +4,11 @@ import { chessIcon } from "./Icons";
 
 const Logo = (props) => {
   return (
-    <LinkStyled to="/">
-      <LogoStyled>
-        <ChessLogoIcon>{chessIcon("white", "25px")} </ChessLogoIcon>
+    <LinkStyled to="/" onClick={props.handleReset}>
+      <LogoStyled onClick={props.handleReset}>
+        <ChessLogoIcon onClick={props.handleReset}>
+          {chessIcon("white", "25px")}{" "}
+        </ChessLogoIcon>
         CHESS
       </LogoStyled>
     </LinkStyled>

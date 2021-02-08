@@ -6,6 +6,7 @@ import Square from "../../components/Board/Square";
 import {
   gameEnd,
   rematch,
+  resetGame,
   selectAndMoveFigure,
 } from "../../store/slices/board/boardSlice";
 import { addUpdatedGame } from "../../store/slices/board/boardSlice";
@@ -17,6 +18,7 @@ import Modal from "../../components/UI/Modal";
 import ModalWinLose from "../../components/UI/ModalsTexts/ModalWinLose";
 import PawnPromotion from "../../components/Board/PawnPromotion";
 import Logo from "../../components/UI/Logo";
+import { resetRoom } from "../../store/slices/rooms/roomsSlice";
 
 const Chess = () => {
   const dispatch = useDispatch();
@@ -129,6 +131,12 @@ const Chess = () => {
     dispatch(rematch());
   };
 
+  // handle reset
+  const handleReset = () => {
+    dispatch(resetRoom());
+    dispatch(resetGame());
+  };
+
   return (
     <Container>
       <PlayerOne>
@@ -193,7 +201,7 @@ const Chess = () => {
         ></Player>
       </PlayerTwo>
 
-      <Logo />
+      <Logo handleReset={handleReset} />
 
       {activePlayer === color && shouldPawnPromote ? (
         <PawnPromotion color={color} />

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { database } from "../../../services/firebaseDb";
 import { generateRandomPlayerColor } from "../../../utils/createGameHelpers/generateRandomPlayerColor";
 import { generateRoomNum } from "../../../utils/createGameHelpers/generateRoomNum";
+import { resetRoomState } from "../../../utils/gameFlowHelpers/resetRoomState";
 
 export const createRoom = createAsyncThunk(
   "rooms/saveNewRoom",
@@ -67,6 +68,9 @@ const roomsSlice = createSlice({
     startGame(state, action) {
       state.status = "started";
     },
+    resetRoom(state, action) {
+      resetRoomState(state);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -99,6 +103,6 @@ const roomsSlice = createSlice({
   },
 });
 
-export const { startGame } = roomsSlice.actions;
+export const { startGame, resetRoom } = roomsSlice.actions;
 
 export default roomsSlice.reducer;
