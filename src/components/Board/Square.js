@@ -77,7 +77,7 @@ const SquareContainer = styled.div`
     height: 40px;
   }
 
-  @media only screen and (min-width: 481px) and (max-width: 1920px) {
+  @media only screen and (min-width: 481px) and (max-width: 1919px) {
     width: 60px;
     height: 60px;
   }
@@ -94,7 +94,7 @@ const Circle = styled.div`
     height: 15px;
   }
 
-  @media only screen and (min-width: 481px) and (max-width: 1920px) {
+  @media only screen and (min-width: 481px) and (max-width: 1919px) {
     width: 20px;
     height: 20px;
   }
@@ -114,7 +114,7 @@ const CapturedCircle = styled.div`
     border: 5px solid rgba(171, 216, 141, 0.4);
   }
 
-  @media only screen and (min-width: 481px) and (max-width: 1920px) {
+  @media only screen and (min-width: 481px) and (max-width: 1919px) {
     width: 40px;
     height: 40px;
     border: 7px solid rgba(171, 216, 141, 0.4);
@@ -130,7 +130,7 @@ const ImgStyled = styled.img`
     height: 40px;
   }
 
-  @media only screen and (min-width: 481px) and (max-width: 1920px) {
+  @media only screen and (min-width: 481px) and (max-width: 1919px) {
     width: 60px;
     height: 60px;
   }
