@@ -43,6 +43,8 @@ export const findPossibleMovesCurrFig = ({
     if (possibleMovesCurrFig.length === 0 && !isGameEnded) {
       state.end.isGameEnded = true;
       state.end.howIsGameEnded = "checkmate";
+      state.end.loser = player;
+      state.end.winner = player === "W" ? "B" : "W";
     }
 
     // if is OTHER figure => two possibilites:
