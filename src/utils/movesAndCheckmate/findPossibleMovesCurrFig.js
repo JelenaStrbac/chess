@@ -47,10 +47,14 @@ export const findPossibleMovesCurrFig = ({
       state.end.winner = player === "W" ? "B" : "W";
     }
 
-    // if is OTHER figure => two possibilites:
+    // if is OTHER figure => two possibilities:
   } else {
-    //1) king is checkmated (no possible moves for other figures, only king can move if possible)
-    if (checkIfKingIsUnderCheckmate(board, player, notation, startFields)) {
+    //1) if moving of that figure would cause king to be checkmated, figure does not have possible moves
+    const newBoard = [];
+    board.forEach((el) => newBoard.push([...el]));
+    newBoard[currentRow][currentCol] = null;
+
+    if (checkIfKingIsUnderCheckmate(newBoard, player, notation, startFields)) {
       possibleMovesCurrFig = [];
       //2) king is NOT checkmated (figure can move on its possible moves)
     } else {
