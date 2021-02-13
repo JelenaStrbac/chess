@@ -54,7 +54,31 @@ export const findPossibleMovesCurrFig = ({
     board.forEach((el) => newBoard.push([...el]));
     newBoard[currentRow][currentCol] = null;
 
-    if (checkIfKingIsUnderCheckmate(newBoard, player, notation, startFields)) {
+    const movesOfCurrFigureArray = (possibleMovesCurrFig = allMovingFiguresFns[
+      figure
+    ]({
+      board: board,
+      player: player,
+      currentRow: currentRow,
+      currentCol: currentCol,
+      notation: notation,
+      startFields: startFields,
+    })?.filter((el) => el !== "en passant" && el !== "pawn promotion"));
+
+    const isCheckArray = [];
+    movesOfCurrFigureArray.forEach((el) => {
+      const [row, col] = el?.split("-");
+
+      const updatedBoard = [];
+      newBoard.forEach((elem) => updatedBoard.push([...elem]));
+      updatedBoard[row][col] = currFigure;
+
+      isCheckArray.push(
+        checkIfKingIsUnderCheckmate(updatedBoard, player, notation, startFields)
+      );
+    });
+
+    if (isCheckArray.every((element) => element)) {
       possibleMovesCurrFig = [];
       //2) king is NOT checkmated (figure can move on its possible moves)
     } else {
