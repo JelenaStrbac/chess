@@ -32,16 +32,12 @@ export const pawnSpecialMoves = ({
   const movingFigureArrayTwo = pawn({
     board,
     player,
-    currentRow: currRow,
-    currentCol: currCol,
+    currentRow: wanRow,
+    currentCol: wanCol,
     notation,
     startFields,
   });
-  let promote = false;
   if (movingFigureArrayTwo.includes("pawn promotion")) {
-    promote = true;
     state.current.figure = `${player}${state.pawnPromotion[player]}`;
   }
-
-  return promote;
 };

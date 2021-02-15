@@ -203,7 +203,9 @@ const Chess = () => {
 
       <Logo handleReset={handleReset} />
 
-      {activePlayer === color && shouldPawnPromote ? (
+      {activePlayer === color &&
+      shouldPawnPromote &&
+      possibleMoves.length !== 0 ? (
         <PawnPromotion color={color} />
       ) : null}
 

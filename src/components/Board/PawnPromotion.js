@@ -33,6 +33,11 @@ const Container = styled.div`
   position: absolute;
   top: 2rem;
   left: 10rem;
+
+  @media only screen and (max-width: 480px) {
+    top: 8rem;
+    z-index: 1000;
+  }
 `;
 
 export default PawnPromotion;
