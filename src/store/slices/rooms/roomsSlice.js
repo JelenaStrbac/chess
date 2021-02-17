@@ -65,16 +65,16 @@ const roomsSlice = createSlice({
   name: "room",
   initialState,
   reducers: {
-    startGame(state, action) {
+    startGame(state) {
       state.status = "started";
     },
-    resetRoom(state, action) {
+    resetRoom(state) {
       resetRoomState(state);
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createRoom.pending, (state, action) => {
+      .addCase(createRoom.pending, (state) => {
         state.status = "pending";
       })
       .addCase(createRoom.fulfilled, (state, action) => {
@@ -84,10 +84,10 @@ const roomsSlice = createSlice({
         state.color = obj.playerColorOne;
         state.status = "loading";
       })
-      .addCase(createRoom.rejected, (state, action) => {
+      .addCase(createRoom.rejected, (state) => {
         state.status = "error";
       })
-      .addCase(joinRoom.pending, (state, action) => {
+      .addCase(joinRoom.pending, (state) => {
         state.status = "loading";
       })
       .addCase(joinRoom.fulfilled, (state, action) => {
@@ -97,7 +97,7 @@ const roomsSlice = createSlice({
         state.color = obj.playerColorTwo;
         state.status = "started";
       })
-      .addCase(joinRoom.rejected, (state, action) => {
+      .addCase(joinRoom.rejected, (state) => {
         state.status = "error";
       });
   },

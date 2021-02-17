@@ -2,13 +2,12 @@ import { FC } from "react";
 import styled from "styled-components";
 
 type Props = {
-  remove: string;
+  remove?: string;
   width: number;
   height: number;
 };
 
-
-const Shape: FC<Props> = ({remove, width, height}) => {
+const Shape: FC<Props> = ({ remove, width, height }) => {
   return (
     <Container>
       <SVGStyle
@@ -49,7 +48,7 @@ const Container = styled.div`
   z-index: 1;
 `;
 
-const SVGStyle = styled.svg<{ remove: string }>`
+const SVGStyle = styled.svg<{ remove?: string }>`
   @media only screen and (max-width: 480px) {
     width: ${(props) => (props.remove === "true" ? "0" : "300px")};
     height: ${(props) => (props.remove === "true" ? "0" : "600px")};

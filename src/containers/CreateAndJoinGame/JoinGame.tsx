@@ -1,26 +1,21 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { createRoom, startGame } from "../../store/slices/rooms/roomsSlice";
-import { database } from "../../services/firebaseDb";
-import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
+import Input from "../../components/UI/Input";
 import Spinner from "../../components/UI/Spinner";
 import Error from "../../components/UI/Error";
+import { joinRoom } from "../../store/slices/rooms/roomsSlice";
 import Chess from "../Board/Chess";
-import useModal from "../../hooks/useModal";
-import ModalRoomId from "../../components/UI/ModalsTexts/ModalRoomId";
 import { checkValidity } from "../../utils/createGameHelpers/checkValidity";
 import background from "../../assets/background/chess-background.png";
 import Shape from "../../components/UI/Shape";
+import { RootState } from "../../types";
 
-const CreateGame = () => {
+const JoinGame = () => {
   const dispatch = useDispatch();
-  const { status } = useSelector((state) => state.room);
-  const { roomID } = useSelector((state) => state.room);
-
-  const { isShowing, toggle } = useModal();
+  const { status } = useSelector((state: RootState) => state.room);
 
   const [formError, setFormError] = useState(false);
 
@@ -36,31 +31,27 @@ const CreateGame = () => {
       message: "Name must have minimum 2 and maximum 20 characters.",
       valid: false,
     },
+    secretKey: {
+      value: "",
+      placeholder: "Secret key",
+      validation: {
+        required: true,
+        length: 8,
+      },
+      message:
+        "Secret key must have exactly 8 alphanumeric characters. Please try again with another secret key.",
+      valid: false,
+    },
   });
 
-  useEffect(() => {
-    let statusRef;
-
-    if (status === "loading") {
-      statusRef = database.ref("rooms/" + roomID + "/status");
-      statusRef.on("value", (snapshot) => {
-        const data = snapshot.val();
-
-        if (data === "started") {
-          dispatch(startGame());
-        }
-      });
-    }
-    return () => statusRef && statusRef.off();
-  }, [status, roomID, dispatch]);
-
-  const onInputChangeHandler = (e, inputIdentifier) => {
-    const updatedInputForm = {
-      ...inputForm,
-    };
+  const onInputChangeHandler = (
+    e: React.FormEvent<HTMLInputElement>,
+    inputIdentifier: keyof typeof inputForm
+  ) => {
+    const updatedInputForm = JSON.parse(JSON.stringify(inputForm));
 
     const updatedFormElement = { ...updatedInputForm[inputIdentifier] };
-    updatedFormElement.value = e.target.value;
+    updatedFormElement.value = e.currentTarget.value;
 
     updatedInputForm[inputIdentifier] = updatedFormElement;
 
@@ -72,34 +63,43 @@ const CreateGame = () => {
 
     let formIsValid = true;
     Object.keys(updatedInputForm).forEach((el) => {
-      formIsValid = updatedInputForm[el].valid && formIsValid;
+      formIsValid =
+        updatedInputForm[el as keyof typeof inputForm].valid && formIsValid;
     });
 
     setInputForm(updatedInputForm);
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
 
-    if (Object.keys(inputForm).every((el) => inputForm[el].valid === true)) {
-      dispatch(createRoom(inputForm.name.value));
-      toggle();
+    if (
+      Object.keys(inputForm).every(
+        (el) => inputForm[el as keyof typeof inputForm].valid === true
+      )
+    ) {
+      dispatch(
+        // @ts-ignore
+        joinRoom({
+          roomID: inputForm.secretKey.value,
+          name: inputForm.name.value,
+        })
+      );
     } else {
       setFormError(true);
     }
   };
 
-  const formElementsArray = [];
-  Object.keys(inputForm).forEach((el) => {
-    formElementsArray.push({
-      id: el,
-      config: inputForm[el],
-    });
+  const formElementsArray = Object.keys(inputForm).map((el) => {
+    return {
+      id: el as keyof typeof inputForm,
+      config: inputForm[el as keyof typeof inputForm],
+    };
   });
 
   let renderComponent = (
     <Container>
-      <h1 style={{ zIndex: 1000 }}>Create game</h1>
+      <h1 style={{ zIndex: 1000 }}>Join game</h1>
       <FormStyled autoComplete="off" onSubmit={onSubmitHandler}>
         {formElementsArray.map((el) => (
           <Input
@@ -112,7 +112,7 @@ const CreateGame = () => {
             onInputChangeHandler={(e) => onInputChangeHandler(e, el.id)}
           />
         ))}
-        <Button>Create</Button>
+        <Button>Join</Button>
       </FormStyled>
       <ImgStyled src={background} alt="chess" />
       <Shape width={800} height={400} remove="true" />
@@ -121,11 +121,7 @@ const CreateGame = () => {
   );
 
   if (status === "loading") {
-    renderComponent = (
-      <Spinner showModal={isShowing}>
-        <ModalRoomId isShowing={isShowing} toggle={toggle} roomID={roomID} />
-      </Spinner>
-    );
+    renderComponent = <Spinner />;
   } else if (status === "started") {
     renderComponent = <Chess />;
   } else if (status === "error") {
@@ -158,4 +154,4 @@ const ImgStyled = styled.img`
   z-index: 1000;
 `;
 
-export default CreateGame;
+export default JoinGame;

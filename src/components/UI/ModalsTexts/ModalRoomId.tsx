@@ -5,7 +5,7 @@ import Modal from "../Modal";
 
 type Props = {
   isShowing: boolean;
-  roomID: string;
+  roomID: string | null;
   toggle: () => void;
 };
 
