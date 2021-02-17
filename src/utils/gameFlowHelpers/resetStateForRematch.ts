@@ -1,4 +1,6 @@
-export const resetStateForRematch = (state) => {
+import { RootState } from "../../types";
+
+export const resetStateForRematch = (state: RootState["game"]) => {
   state.board = [
     ["BR", "BN", "BB", "BQ", "BK", "BB", "BN", "BR"],
     ["BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP"],

@@ -5,11 +5,11 @@ import { cup, rematch } from "../Icons";
 type Props = {
   winner: boolean;
   player: string;
-  reason: "checkmate" | "resign";
+  reason: "" | "checkmate" | "resign";
   handleRematch: () => void;
 };
 
-const ModalWinLose: FC<Props> = ({winner, player, reason, handleRematch}) => {
+const ModalWinLose: FC<Props> = ({ winner, player, reason, handleRematch }) => {
   const message = winner
     ? `Congratulations, you won ${player}!`
     : `Sorry, ${player}, you lost the game...`;

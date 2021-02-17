@@ -29,9 +29,10 @@ const PawnPromotion: FC<Props> = ({ color }) => {
       | "WP"
       | "WQ"
       | "WR"
+      | null
   ) => {
-    //const name = e.target.name as typeof e.target.name
-    dispatch(promotePawnTo(name[1]));
+    const nameLetter = name?.[1];
+    dispatch(promotePawnTo(nameLetter));
   };
 
   const arrWithFigures: (WhitePromotion | BlackPromotion)[] =

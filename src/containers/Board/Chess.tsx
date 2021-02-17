@@ -119,7 +119,8 @@ const Chess = () => {
       | "WN"
       | "WP"
       | "WQ"
-      | "WR",
+      | "WR"
+      | null,
     id?: string
   ) => {
     const currTargetedField = id;
@@ -160,7 +161,7 @@ const Chess = () => {
         <Player
           color={color}
           activePlayer={activePlayer}
-          capturedFigures={captured?.[color]}
+          capturedFigures={color && captured?.[color]}
           notation={color === "W" ? notationWhite : notationBlack}
           name={playerOne.color === color ? playerOne.name : playerTwo.name}
         >

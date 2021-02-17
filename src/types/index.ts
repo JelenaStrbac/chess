@@ -1,6 +1,6 @@
 export interface RootState {
     game: {
-        board: [("BB" | "BK" | "BN" | "BP" | "BQ" | "BR" | "WB" | "WK" | "WN" | "WP" | "WQ" | "WR")][],
+        board: ("BB" | "BK" | "BN" | "BP" | "BQ" | "BR" | "WB" | "WK" | "WN" | "WP" | "WQ" | "WR" | null)[][],
           activePlayer: "W" | "B",
           activePlayerStatus: "selecting" | "moving",
           current: {
@@ -10,30 +10,34 @@ export interface RootState {
           possibleMoves: string[],
           notation: string[],
           captured: {
-            W: ["BB"
-            | "BK"
-            | "BN"
-            | "BP"
-            | "BQ"
-            | "BR"
-            | "WB"
-            | "WK"
-            | "WN"
-            | "WP"
-            | "WQ"
-            | "WR"],
-            B: ["BB"
-            | "BK"
-            | "BN"
-            | "BP"
-            | "BQ"
-            | "BR"
-            | "WB"
-            | "WK"
-            | "WN"
-            | "WP"
-            | "WQ"
-            | "WR"],
+            W: (
+              | "BB"
+              | "BK"
+              | "BN"
+              | "BP"
+              | "BQ"
+              | "BR"
+              | "WB"
+              | "WK"
+              | "WN"
+              | "WP"
+              | "WQ"
+              | "WR"
+            )[],
+            B: (
+              | "BB"
+              | "BK"
+              | "BN"
+              | "BP"
+              | "BQ"
+              | "BR"
+              | "WB"
+              | "WK"
+              | "WN"
+              | "WP"
+              | "WQ"
+              | "WR"
+            )[],
           },
           shouldPawnPromote: boolean,
           pawnPromotion: {
@@ -42,7 +46,7 @@ export interface RootState {
           },
           end: {
             isGameEnded: boolean,
-            howIsGameEnded: "checkmate" | "resign", // checkmate, resign
+            howIsGameEnded: "" | "checkmate" | "resign", // checkmate, resign
             winner: string,
             loser: string,
             isRematch: boolean,
@@ -51,7 +55,7 @@ export interface RootState {
     room: {
         roomID: string | null,
         status: null | "started" | "pending" | "loading" | "error",
-        color: "W" | "B",
+        color: null |"W" | "B",
         name: null | string,
     }
 }

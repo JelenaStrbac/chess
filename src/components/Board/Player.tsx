@@ -31,23 +31,25 @@ const figures = {
 
 type Props = {
   rotate?: boolean;
-  color: "W" | "B";
+  color: null | "W" | "B";
   activePlayer: "W" | "B";
   notation: string[];
-  capturedFigures: [
-    | "BB"
-    | "BK"
-    | "BN"
-    | "BP"
-    | "BQ"
-    | "BR"
-    | "WB"
-    | "WK"
-    | "WN"
-    | "WP"
-    | "WQ"
-    | "WR"
-  ];
+  capturedFigures:
+    | (
+        | "BB"
+        | "BK"
+        | "BN"
+        | "BP"
+        | "BQ"
+        | "BR"
+        | "WB"
+        | "WK"
+        | "WN"
+        | "WP"
+        | "WQ"
+        | "WR"
+      )[]
+    | null;
   name: string;
 };
 
@@ -61,9 +63,13 @@ const Player: FC<Props> = ({
   children,
 }) => {
   return (
-    <PlayerContainer rotate={rotate} color={color}>
-      <Box rotate={rotate} color={color} activePlayer={activePlayer}>
-        <MiniTitle color={color}>Moves</MiniTitle>
+    <PlayerContainer rotate={rotate} color={color || undefined}>
+      <Box
+        rotate={rotate}
+        color={color || undefined}
+        activePlayer={activePlayer}
+      >
+        <MiniTitle color={color || undefined}>Moves</MiniTitle>
         <Table>
           <tbody>
             {notation?.map((el, i) => (
@@ -76,8 +82,12 @@ const Player: FC<Props> = ({
         </Table>
       </Box>
 
-      <Box rotate={rotate} color={color} activePlayer={activePlayer}>
-        <MiniTitle color={color}>Captured pieces</MiniTitle>
+      <Box
+        rotate={rotate}
+        color={color || undefined}
+        activePlayer={activePlayer}
+      >
+        <MiniTitle color={color || undefined}>Captured pieces</MiniTitle>
         <div>
           {capturedFigures?.map((el, i) => (
             <img
@@ -97,8 +107,12 @@ const Player: FC<Props> = ({
         ))}
       </CapturedMobile>
 
-      <MenuStyled rotate={rotate} color={color} activePlayer={activePlayer}>
-        <Title color={color} activePlayer={activePlayer}>
+      <MenuStyled
+        rotate={rotate}
+        color={color || undefined}
+        activePlayer={activePlayer}
+      >
+        <Title color={color || undefined} activePlayer={activePlayer}>
           {name}
         </Title>
         {children}
@@ -107,7 +121,10 @@ const Player: FC<Props> = ({
   );
 };
 
-const PlayerContainer = styled.div<{ rotate?: boolean }>`
+const PlayerContainer = styled.div<{
+  color?: "W" | "B";
+  rotate?: boolean;
+}>`
   display: flex;
   flex-direction: ${(props) => (props.rotate ? "column-reverse" : "column")};
   align-items: ${(props) => (props.rotate ? "flex-end" : "flex-start")};
@@ -115,7 +132,7 @@ const PlayerContainer = styled.div<{ rotate?: boolean }>`
 `;
 
 const MenuStyled = styled.div<{
-  color: "W" | "B";
+  color?: "W" | "B";
   rotate?: boolean;
   activePlayer: "W" | "B";
 }>`
@@ -162,7 +179,7 @@ const MenuStyled = styled.div<{
   }
 `;
 
-const Title = styled.div<{ color: "W" | "B"; activePlayer: "W" | "B" }>`
+const Title = styled.div<{ color?: "W" | "B"; activePlayer: "W" | "B" }>`
   color: ${(props) =>
     props.color === "W"
       ? props.activePlayer === "W"
@@ -179,7 +196,7 @@ const Title = styled.div<{ color: "W" | "B"; activePlayer: "W" | "B" }>`
   }
 `;
 
-const MiniTitle = styled.div<{ color: "W" | "B" }>`
+const MiniTitle = styled.div<{ color?: "W" | "B" }>`
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border-bottom: ${(props) =>
@@ -193,7 +210,7 @@ const MiniTitle = styled.div<{ color: "W" | "B" }>`
 `;
 
 const Box = styled.div<{
-  color: "W" | "B";
+  color?: "W" | "B";
   rotate?: boolean;
   activePlayer: "W" | "B";
 }>`

@@ -43,7 +43,8 @@ type Props = {
     | "WN"
     | "WP"
     | "WQ"
-    | "WR";
+    | "WR"
+    | null;
   field?: string;
   isBlack?: boolean;
   possibleMove?: boolean;

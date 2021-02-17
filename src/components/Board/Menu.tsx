@@ -4,12 +4,12 @@ import styled from "styled-components";
 import { flag } from "../UI/Icons";
 
 type Props = {
-  color: "B" | "W";
+  color: null | "B" | "W";
   activePlayer: "B" | "W";
   resign: () => void;
 };
 
-const Menu: FC<Props> = ({color, activePlayer, resign}) => {
+const Menu: FC<Props> = ({ color, activePlayer, resign }) => {
   return (
     <Container>
       <Control onClick={resign}>
