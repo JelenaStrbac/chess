@@ -15,7 +15,21 @@ type BlackPromotion = "BB" | "BN" | "BQ" | "BR";
 const PawnPromotion: FC<Props> = ({ color }) => {
   const dispatch = useDispatch();
 
-  const onClickHandler = (name: string) => {
+  const onClickHandler = (
+    name:
+      | "BB"
+      | "BK"
+      | "BN"
+      | "BP"
+      | "BQ"
+      | "BR"
+      | "WB"
+      | "WK"
+      | "WN"
+      | "WP"
+      | "WQ"
+      | "WR"
+  ) => {
     //const name = e.target.name as typeof e.target.name
     dispatch(promotePawnTo(name[1]));
   };

@@ -1,6 +1,6 @@
 export interface RootState {
     game: {
-        board: (string | null)[],
+        board: [("BB" | "BK" | "BN" | "BP" | "BQ" | "BR" | "WB" | "WK" | "WN" | "WP" | "WQ" | "WR")][],
           activePlayer: "W" | "B",
           activePlayerStatus: "selecting" | "moving",
           current: {
@@ -10,8 +10,30 @@ export interface RootState {
           possibleMoves: string[],
           notation: string[],
           captured: {
-            W: string[],
-            B: string[],
+            W: ["BB"
+            | "BK"
+            | "BN"
+            | "BP"
+            | "BQ"
+            | "BR"
+            | "WB"
+            | "WK"
+            | "WN"
+            | "WP"
+            | "WQ"
+            | "WR"],
+            B: ["BB"
+            | "BK"
+            | "BN"
+            | "BP"
+            | "BQ"
+            | "BR"
+            | "WB"
+            | "WK"
+            | "WN"
+            | "WP"
+            | "WQ"
+            | "WR"],
           },
           shouldPawnPromote: boolean,
           pawnPromotion: {
@@ -20,7 +42,7 @@ export interface RootState {
           },
           end: {
             isGameEnded: boolean,
-            howIsGameEnded: string, // checkmate, resign
+            howIsGameEnded: "checkmate" | "resign", // checkmate, resign
             winner: string,
             loser: string,
             isRematch: boolean,
@@ -29,7 +51,7 @@ export interface RootState {
     room: {
         roomID: string | null,
         status: null | "started" | "pending" | "loading" | "error",
-        color: null | "W" | "B",
+        color: "W" | "B",
         name: null | string,
     }
 }

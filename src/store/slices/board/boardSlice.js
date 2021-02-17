@@ -189,10 +189,10 @@ const boardSlice = createSlice({
         };
       },
     },
-    rematch(state, action) {
+    rematch(state) {
       resetStateForRematch(state);
     },
-    resetGame(state, action) {
+    resetGame(state) {
       resetStateForRematch(state);
     },
     addUpdatedGame(state, action) {

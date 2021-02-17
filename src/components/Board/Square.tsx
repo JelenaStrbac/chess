@@ -46,9 +46,9 @@ type Props = {
     | "WR";
   field?: string;
   isBlack?: boolean;
-  possibleMove?: string[];
-  capturedFigures?: string[];
-  handleClick: (arg1: Props["fig"], arg2?: Props["field"]) => void;
+  possibleMove?: boolean;
+  capturedFigures?: boolean;
+  handleClick: (name: Props["fig"], id?: Props["field"]) => void;
 };
 
 const Square: FC<Props> = ({

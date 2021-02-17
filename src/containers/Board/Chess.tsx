@@ -19,37 +19,38 @@ import ModalWinLose from "../../components/UI/ModalsTexts/ModalWinLose";
 import PawnPromotion from "../../components/Board/PawnPromotion";
 import Logo from "../../components/UI/Logo";
 import { resetRoom } from "../../store/slices/rooms/roomsSlice";
+import { RootState } from "../../types";
 
 const Chess = () => {
   const dispatch = useDispatch();
-  const { board } = useSelector((state) => state.game);
+  const { board } = useSelector((state: RootState) => state.game);
 
-  const { activePlayer } = useSelector((state) => state.game);
-  const { possibleMoves } = useSelector((state) => state.game);
+  const { activePlayer } = useSelector((state: RootState) => state.game);
+  const { possibleMoves } = useSelector((state: RootState) => state.game);
 
-  const { field } = useSelector((state) => state.game.current);
+  const { field } = useSelector((state: RootState) => state.game.current);
   const [row, column] = field?.split("-");
 
-  const { notation } = useSelector((state) => state.game);
+  const { notation } = useSelector((state: RootState) => state.game);
   const notationWhite = notation?.filter((el, i) => i % 2 === 0);
   const notationBlack = notation?.filter((el, i) => i % 2 !== 0);
 
-  const { captured } = useSelector((state) => state.game);
-  const { shouldPawnPromote } = useSelector((state) => state.game);
+  const { captured } = useSelector((state: RootState) => state.game);
+  const { shouldPawnPromote } = useSelector((state: RootState) => state.game);
 
-  const { end } = useSelector((state) => state.game);
+  const { end } = useSelector((state: RootState) => state.game);
   const { isGameEnded } = end;
   const { isRematch } = end;
   const { isShowing, toggle } = useModal();
 
-  const { status } = useSelector((state) => state.room);
-  const { roomID } = useSelector((state) => state.room);
-  const { game } = useSelector((state) => state);
-  const { color } = useSelector((state) => state.room);
+  const { status } = useSelector((state: RootState) => state.room);
+  const { roomID } = useSelector((state: RootState) => state.room);
+  const { game } = useSelector((state: RootState) => state);
+  const { color } = useSelector((state: RootState) => state.room);
   const oppositeColor = color === "W" ? "B" : "W";
 
-  const [playerOne, setPlayerOne] = useState("");
-  const [playerTwo, setPlayerTwo] = useState("");
+  const [playerOne, setPlayerOne] = useState({ color: "", name: "" });
+  const [playerTwo, setPlayerTwo] = useState({ color: "", name: "" });
 
   // read once players names from database
   useEffect(() => {
@@ -70,9 +71,7 @@ const Chess = () => {
 
   // listen all changes in game obj from firebase and dispatch action to update game obj in redux store
   useEffect(() => {
-    let gameRef;
-
-    gameRef = database.ref("rooms/" + roomID + "/game");
+    let gameRef = database.ref("rooms/" + roomID + "/game");
     gameRef.on("value", (snapshot) => {
       const data = snapshot.val();
       const gameObj = JSON.parse(data);
@@ -107,11 +106,27 @@ const Chess = () => {
   }, [isRematch, toggle]);
 
   // on click dispatch actions in redux store to SELECT and MOVE figure (only allowed for active player)
-  const onClickHandler = (name, id) => {
+  const onClickHandler = (
+    name:
+      | "BB"
+      | "BK"
+      | "BN"
+      | "BP"
+      | "BQ"
+      | "BR"
+      | "WB"
+      | "WK"
+      | "WN"
+      | "WP"
+      | "WQ"
+      | "WR",
+    id?: string
+  ) => {
     const currTargetedField = id;
     const currTargetedFigure = name;
 
     if (activePlayer === color) {
+      // @ts-ignore
       dispatch(selectAndMoveFigure(currTargetedField, currTargetedFigure));
     }
   };
@@ -121,19 +136,21 @@ const Chess = () => {
     if (activePlayer === color) {
       const loser = activePlayer;
       const winner = activePlayer === "W" ? "B" : "W";
-
+      // @ts-ignore
       dispatch(gameEnd("resign", winner, loser));
     }
   };
 
   // handle rematch
   const handleRematch = () => {
+    // @ts-ignore
     dispatch(rematch());
   };
 
   // handle reset
   const handleReset = () => {
     dispatch(resetRoom());
+    // @ts-ignore
     dispatch(resetGame());
   };
 
@@ -190,7 +207,7 @@ const Chess = () => {
 
       <PlayerTwo>
         <Player
-          rotate="true"
+          rotate
           color={oppositeColor}
           activePlayer={activePlayer}
           capturedFigures={captured?.[oppositeColor]}
@@ -236,7 +253,7 @@ const Container = styled.div`
   }
 `;
 
-const ChessBoardContainer = styled.div`
+const ChessBoardContainer = styled.div<{ isBlack: boolean }>`
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-auto-rows: 1fr;
