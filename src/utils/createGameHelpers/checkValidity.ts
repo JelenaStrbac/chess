@@ -1,4 +1,12 @@
-export const checkValidity = (value, rules) => {
+export const checkValidity = (
+  value: string,
+  rules:
+    | { required: boolean; minLength: number; maxLength: number }
+    | {
+        required: boolean;
+        length: number;
+      }
+) => {
   let isValid = true;
   if (!rules) {
     return true;
@@ -9,15 +17,15 @@ export const checkValidity = (value, rules) => {
       (typeof value !== "number" ? value.trim() !== "" : value) && isValid;
   }
 
-  if (rules.minLength) {
+  if ("minLength" in rules && rules.minLength) {
     isValid = value.length >= rules.minLength && isValid;
   }
 
-  if (rules.maxLength) {
+  if ("maxLength" in rules && rules.maxLength) {
     isValid = value.length <= rules.maxLength && isValid;
   }
 
-  if (rules.length) {
+  if ("length" in rules && rules.length) {
     isValid = value.length === rules.length && isValid;
   }
 
