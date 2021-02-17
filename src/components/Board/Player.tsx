@@ -1,3 +1,4 @@
+import { FC } from "react";
 import styled from "styled-components";
 
 import BB from "../../assets/img/BB.png";
@@ -28,18 +29,44 @@ const figures = {
   WR: WR,
 };
 
-const Player = (props) => {
+type Props = {
+  rotate: boolean;
+  color: "W" | "B";
+  activePlayer: "W" | "B";
+  notation: string[];
+  capturedFigures: [
+    | "BB"
+    | "BK"
+    | "BN"
+    | "BP"
+    | "BQ"
+    | "BR"
+    | "WB"
+    | "WK"
+    | "WN"
+    | "WP"
+    | "WQ"
+    | "WR"
+  ];
+  name: string;
+};
+
+const Player: FC<Props> = ({
+  rotate,
+  color,
+  activePlayer,
+  notation,
+  capturedFigures,
+  name,
+  children,
+}) => {
   return (
-    <PlayerContainer rotate={props.rotate} color={props.color}>
-      <Box
-        rotate={props.rotate}
-        color={props.color}
-        activePlayer={props.activePlayer}
-      >
-        <MiniTitle color={props.color}>Moves</MiniTitle>
+    <PlayerContainer rotate={rotate} color={color}>
+      <Box rotate={rotate} color={color} activePlayer={activePlayer}>
+        <MiniTitle color={color}>Moves</MiniTitle>
         <Table>
           <tbody>
-            {props.notation?.map((el, i) => (
+            {notation?.map((el, i) => (
               <tr key={i}>
                 <TData>{i + 1}.</TData>
                 <TData>{el}</TData>
@@ -49,14 +76,10 @@ const Player = (props) => {
         </Table>
       </Box>
 
-      <Box
-        rotate={props.rotate}
-        color={props.color}
-        activePlayer={props.activePlayer}
-      >
-        <MiniTitle color={props.color}>Captured pieces</MiniTitle>
+      <Box rotate={rotate} color={color} activePlayer={activePlayer}>
+        <MiniTitle color={color}>Captured pieces</MiniTitle>
         <div>
-          {props.capturedFigures?.map((el, i) => (
+          {capturedFigures?.map((el, i) => (
             <img
               key={i}
               width="20px"
@@ -67,36 +90,35 @@ const Player = (props) => {
           ))}
         </div>
       </Box>
-      {/* <BoxTimer>10:00</BoxTimer> */}
 
       <CapturedMobile>
-        {props.capturedFigures?.map((el, i) => (
+        {capturedFigures?.map((el, i) => (
           <img key={i} width="20px" height="20px" src={figures[el]} alt={el} />
         ))}
       </CapturedMobile>
 
-      <MenuStyled
-        rotate={props.rotate}
-        color={props.color}
-        activePlayer={props.activePlayer}
-      >
-        <Title color={props.color} activePlayer={props.activePlayer}>
-          {props.name}
+      <MenuStyled rotate={rotate} color={color} activePlayer={activePlayer}>
+        <Title color={color} activePlayer={activePlayer}>
+          {name}
         </Title>
-        {props.children}
+        {children}
       </MenuStyled>
     </PlayerContainer>
   );
 };
 
-const PlayerContainer = styled.div`
+const PlayerContainer = styled.div<{ rotate: boolean }>`
   display: flex;
   flex-direction: ${(props) => (props.rotate ? "column-reverse" : "column")};
   align-items: ${(props) => (props.rotate ? "flex-end" : "flex-start")};
   color: ${(props) => (props.color === "W" ? "white" : "black")};
 `;
 
-const MenuStyled = styled.div`
+const MenuStyled = styled.div<{
+  color: "W" | "B";
+  rotate: boolean;
+  activePlayer: "W" | "B";
+}>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -140,7 +162,7 @@ const MenuStyled = styled.div`
   }
 `;
 
-const Title = styled.div`
+const Title = styled.div<{ color: "W" | "B"; activePlayer: "W" | "B" }>`
   color: ${(props) =>
     props.color === "W"
       ? props.activePlayer === "W"
@@ -157,7 +179,7 @@ const Title = styled.div`
   }
 `;
 
-const MiniTitle = styled.div`
+const MiniTitle = styled.div<{ color: "W" | "B" }>`
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border-bottom: ${(props) =>
@@ -170,7 +192,11 @@ const MiniTitle = styled.div`
   }
 `;
 
-const Box = styled.div`
+const Box = styled.div<{
+  color: "W" | "B";
+  rotate: boolean;
+  activePlayer: "W" | "B";
+}>`
   display: flex;
   flex-direction: column;
   margin: 0.3rem 0;

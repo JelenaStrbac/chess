@@ -3,16 +3,25 @@ import { useDispatch } from "react-redux";
 
 import { promotePawnTo } from "../../store/slices/board/boardSlice";
 import Square from "./Square";
+import { FC } from "react";
 
-const PawnPromotion = (props) => {
+type Props = {
+  color: "B" | "W";
+};
+
+type WhitePromotion = "WB" | "WN" | "WQ" | "WR";
+type BlackPromotion = "BB" | "BN" | "BQ" | "BR";
+
+const PawnPromotion: FC<Props> = ({ color }) => {
   const dispatch = useDispatch();
 
-  const onClickHandler = (e) => {
-    dispatch(promotePawnTo(e.target.name[1]));
+  const onClickHandler = (name: string) => {
+    //const name = e.target.name as typeof e.target.name
+    dispatch(promotePawnTo(name[1]));
   };
 
-  const arrWithFigures =
-    props.color === "W" ? ["WB", "WN", "WQ", "WR"] : ["BB", "BN", "BQ", "BR"];
+  const arrWithFigures: (WhitePromotion | BlackPromotion)[] =
+    color === "W" ? ["WB", "WN", "WQ", "WR"] : ["BB", "BN", "BQ", "BR"];
 
   return (
     <Container>

@@ -1,17 +1,24 @@
+import { FC } from "react";
 import styled from "styled-components";
 
 import { flag } from "../UI/Icons";
 
-const Menu = (props) => {
+type Props = {
+  color: "B" | "W";
+  activePlayer: "B" | "W";
+  resign: () => void;
+};
+
+const Menu: FC<Props> = ({color, activePlayer, resign}) => {
   return (
     <Container>
-      <Control onClick={props.resign}>
+      <Control onClick={resign}>
         {flag(
-          props.color === "W"
-            ? props.activePlayer === "W"
+          color === "W"
+            ? activePlayer === "W"
               ? "white"
               : "rgba(255, 255, 255, 0.3)"
-            : props.activePlayer === "B"
+            : activePlayer === "B"
             ? "black"
             : "rgba(0, 0, 0, 0.3)"
         )}

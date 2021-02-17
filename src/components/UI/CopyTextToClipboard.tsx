@@ -4,18 +4,19 @@ import { useSelector } from "react-redux";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { copy } from "./Icons";
+import { RootState } from "../../types";
 
-const CopyTextToClipboard = (props) => {
+const CopyTextToClipboard = () => {
   const [copied, setCopied] = useState(false);
 
-  const { roomID } = useSelector((state) => state.room);
+  const { roomID } = useSelector((state: RootState) => state.room);
 
   return (
     <div
       className="CopyTextToClipboard"
       style={{ display: "flex", flexDirection: "column" }}
     >
-      <CopyToClipboard text={roomID} onCopy={() => setCopied(true)}>
+      <CopyToClipboard text={roomID || ""} onCopy={() => setCopied(true)}>
         <BtnStyled>{copy}</BtnStyled>
       </CopyToClipboard>
 

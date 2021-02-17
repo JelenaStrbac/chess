@@ -1,7 +1,13 @@
+import { FC } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
-const Modal = ({ isShowing, hide, children }) =>
+type Props = {
+  isShowing: boolean;
+  hide: () => void;
+};
+
+const Modal: FC<Props> = ({ isShowing, hide, children }) =>
   isShowing
     ? ReactDOM.createPortal(
         <>

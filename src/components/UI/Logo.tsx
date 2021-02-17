@@ -1,12 +1,17 @@
+import { FC } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { chessIcon } from "./Icons";
 
-const Logo = (props) => {
+type Props = {
+  handleReset: () => void;
+};
+
+const Logo: FC<Props> = ({handleReset}) => {
   return (
-    <LinkStyled to="/" onClick={props.handleReset}>
-      <LogoStyled onClick={props.handleReset}>
-        <ChessLogoIcon onClick={props.handleReset}>
+    <LinkStyled to="/" onClick={handleReset}>
+      <LogoStyled onClick={handleReset}>
+        <ChessLogoIcon onClick={handleReset}>
           {chessIcon("white", "25px")}{" "}
         </ChessLogoIcon>
         CHESS

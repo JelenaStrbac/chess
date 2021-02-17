@@ -1,3 +1,4 @@
+import { FC } from "react";
 import styled from "styled-components";
 
 import BB from "../../assets/img/BB.png";
@@ -28,35 +29,51 @@ const figures = {
   WR: WR,
 };
 
-const Square = (props) => {
+type Props = {
+  color: "selected" | "white" | "black";
+  fig:
+    | "BB"
+    | "BK"
+    | "BN"
+    | "BP"
+    | "BQ"
+    | "BR"
+    | "WB"
+    | "WK"
+    | "WN"
+    | "WP"
+    | "WQ"
+    | "WR";
+  field?: string;
+  isBlack?: boolean;
+  possibleMove?: string[];
+  capturedFigures?: string[];
+  handleClick: (arg1: Props["fig"], arg2?: Props["field"]) => void;
+};
+
+const Square: FC<Props> = ({
+  color,
+  fig,
+  field,
+  isBlack,
+  possibleMove,
+  capturedFigures,
+  handleClick,
+}) => {
   return (
     <SquareContainer
-      id={props.field}
-      name={props.fig}
-      color={props.color}
-      onClick={props.handleClick}
-      active={props.active}
-      isBlack={props.isBlack}
+      color={color}
+      onClick={() => handleClick(fig, field)}
+      isBlack={isBlack}
     >
-      {props.fig ? (
-        <ImgStyled
-          src={figures[props.fig]}
-          id={props.field}
-          name={props.fig}
-          alt={props.fig}
-        />
-      ) : null}
-      {props.possibleMove ? (
-        <Circle id={props.field} name={props.fig}></Circle>
-      ) : null}
-      {props.capturedFigures ? (
-        <CapturedCircle id={props.field} name={props.fig}></CapturedCircle>
-      ) : null}
+      {fig ? <ImgStyled src={figures[fig]} id={field} alt={fig} /> : null}
+      {possibleMove ? <Circle id={field}></Circle> : null}
+      {capturedFigures ? <CapturedCircle id={field}></CapturedCircle> : null}
     </SquareContainer>
   );
 };
 
-const SquareContainer = styled.div`
+const SquareContainer = styled.div<{ isBlack?: boolean }>`
   background-color: ${(props) =>
     props.color === "selected"
       ? "#abd88d"
@@ -68,7 +85,7 @@ const SquareContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: ${(props) => (props.active ? "not-allowed" : "pointer")};
+  cursor: pointer;
   position: relative;
   transform: ${(props) => (props.isBlack ? "rotate(180deg)" : "")};
 

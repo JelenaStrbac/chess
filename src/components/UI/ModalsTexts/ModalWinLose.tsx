@@ -1,25 +1,33 @@
+import { FC } from "react";
 import styled from "styled-components";
 import { cup, rematch } from "../Icons";
 
-const ModalWinLose = (props) => {
-  const message = props.winner
-    ? `Congratulations, you won ${props.player}!`
-    : `Sorry, ${props.player}, you lost the game...`;
+type Props = {
+  winner: boolean;
+  player: string;
+  reason: "checkmate" | "resign";
+  handleRematch: () => void;
+};
 
-  const reason = props.winner
-    ? props.reason === "checkmate"
+const ModalWinLose: FC<Props> = ({winner, player, reason, handleRematch}) => {
+  const message = winner
+    ? `Congratulations, you won ${player}!`
+    : `Sorry, ${player}, you lost the game...`;
+
+  const reasonText = winner
+    ? reason === "checkmate"
       ? "You checkmated your opponent!"
       : "Your opponent decided to resign the game."
-    : props.reason === "checkmate"
+    : reason === "checkmate"
     ? "The opponent checkmated you."
     : "";
 
   return (
-    <Container winner={props.winner}>
-      {props.winner ? cup : null}
+    <Container winner={winner}>
+      {winner ? cup : null}
       <Message>{message}</Message>
-      <div>{reason}</div>
-      <Rematch onClick={props.handleRematch}>
+      <div>{reasonText}</div>
+      <Rematch onClick={handleRematch}>
         <div>{rematch}</div>
         <div>Rematch</div>
       </Rematch>
@@ -27,7 +35,7 @@ const ModalWinLose = (props) => {
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ winner: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;

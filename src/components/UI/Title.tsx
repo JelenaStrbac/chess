@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-import bckg from "../../assets/background/chess-background.jpg";
+import background from "../../assets/background/chess-background.jpg";
 
-const Title = (props) => {
+const Title = () => {
   return (
     <Wrapper className="wrapper">
       <div style={{ display: "inline" }}>
@@ -54,7 +54,7 @@ const Wrapper = styled.div`
 `;
 
 const ChessTitle = styled.div`
-  background-image: url(${bckg});
+  background-image: url(${background});
   background-position: center center;
   background-size: contain;
   font-size: 10rem;

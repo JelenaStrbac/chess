@@ -1,12 +1,20 @@
+import { FC } from "react";
 import styled from "styled-components";
 
-const Shape = (props) => {
+type Props = {
+  remove: string;
+  width: number;
+  height: number;
+};
+
+
+const Shape: FC<Props> = ({remove, width, height}) => {
   return (
-    <Container remove={props.remove} stay={props.stay}>
+    <Container>
       <SVGStyle
-        remove={props.remove}
-        width={props.width}
-        height={props.height}
+        remove={remove}
+        width={width}
+        height={height}
         //viewBox={`0 0 ${props.height} ${props.width}`}
         viewBox="0 0 400 800"
         fill="none"
@@ -41,7 +49,7 @@ const Container = styled.div`
   z-index: 1;
 `;
 
-const SVGStyle = styled.svg`
+const SVGStyle = styled.svg<{ remove: string }>`
   @media only screen and (max-width: 480px) {
     width: ${(props) => (props.remove === "true" ? "0" : "300px")};
     height: ${(props) => (props.remove === "true" ? "0" : "600px")};

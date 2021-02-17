@@ -12,7 +12,7 @@ import Chess from "../Board/Chess";
 import useModal from "../../hooks/useModal";
 import ModalRoomId from "../../components/UI/ModalsTexts/ModalRoomId";
 import { checkValidity } from "../../utils/createGameHelpers/checkValidity";
-import bckg from "../../assets/background/chess-background.png";
+import background from "../../assets/background/chess-background.png";
 import Shape from "../../components/UI/Shape";
 
 const CreateGame = () => {
@@ -114,9 +114,9 @@ const CreateGame = () => {
         ))}
         <Button>Create</Button>
       </FormStyled>
-      <ImgStyled src={bckg} alt="chess" />
+      <ImgStyled src={background} alt="chess" />
       <Shape width={800} height={400} remove="true" />
-      <Shape width={400} height={800} stay="true" />
+      <Shape width={400} height={800} />
     </Container>
   );
 

@@ -1,29 +1,38 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 
-const Input = (props) => {
+type Props = {
+  invalid: boolean;
+  placeholder: string;
+  formError: boolean;
+  message: string;
+  value: string;
+  onInputChangeHandler: React.FormEventHandler<HTMLInputElement>;
+};
+
+const Input: FC<Props> = ({invalid, placeholder, formError, message, value, onInputChangeHandler}) => {
   const [isFocusRemoved, setIsFocusRemoved] = useState(false);
   const handleBlur = () => {
     setIsFocusRemoved(true);
   };
 
-  const renderError = (message) => {
+  const renderError = (errMessage: Props['message']) => {
     if (
-      (props.invalid && isFocusRemoved) ||
-      (props.invalid && props.formError)
+      (invalid && isFocusRemoved) ||
+      (invalid && formError)
     ) {
-      return <ErrorMessage>{message}</ErrorMessage>;
+      return <ErrorMessage>{errMessage}</ErrorMessage>;
     }
   };
 
   return (
     <>
-      {renderError(props.message)}
+      {renderError(message)}
       <InputStyled
         type="text"
-        placeholder={props.placeholder}
-        value={props.value}
-        onChange={props.onInputChangeHandler}
+        placeholder={placeholder}
+        value={value}
+        onChange={onInputChangeHandler}
         onBlur={handleBlur}
         required
       />

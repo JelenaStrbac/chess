@@ -1,9 +1,14 @@
+import { FC } from "react";
 import styled from "styled-components";
 
-const Button = (props) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+const Button: FC<Props> = ({ children }) => {
   return (
-    <ButtonStyled type="submit" isDisabled={props.isDisabled}>
-      {props.children}
+    <ButtonStyled type="submit">
+      {children}
     </ButtonStyled>
   );
 };
@@ -23,13 +28,11 @@ const ButtonStyled = styled.button`
   border: none;
   padding: 1rem 2rem;
   border-radius: 0.4rem;
-  cursor: ${(props) => (props.isDisabled ? "not-allowed" : "pointer")};
   outline: none;
   margin: 2.5rem;
   &:hover {
-    box-shadow: ${(props) =>
-      props.isDisabled ? "none" : "0px 15px 20px rgba(209, 139, 71, 0.4)"};
-    transform: ${(props) => (props.isDisabled ? "none" : "translateY(3px)")};
+    box-shadow: "0px 15px 20px rgba(209, 139, 71, 0.4)";
+    transform: "translateY(3px)";
   }
 `;
 

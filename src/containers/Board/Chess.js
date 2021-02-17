@@ -107,9 +107,9 @@ const Chess = () => {
   }, [isRematch, toggle]);
 
   // on click dispatch actions in redux store to SELECT and MOVE figure (only allowed for active player)
-  const onClickHandler = (e) => {
-    const currTargetedField = e.target.id;
-    const currTargetedFigure = e.target.name;
+  const onClickHandler = (name, id) => {
+    const currTargetedField = id;
+    const currTargetedFigure = name;
 
     if (activePlayer === color) {
       dispatch(selectAndMoveFigure(currTargetedField, currTargetedFigure));

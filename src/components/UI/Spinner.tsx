@@ -1,8 +1,14 @@
+import { FC } from "react";
 import styled, { keyframes } from "styled-components";
 
-import { chessIcon } from "../UI/Icons";
+import { chessIcon } from "./Icons";
 
-const Spinner = (props) => {
+type Props = {
+  showModal: boolean;
+  children: React.ReactNode;
+};
+
+const Spinner: FC<Props> = ({showModal, children}) => {
   let renderInSpinner = (
     <Container className="Loader">
       <Load>{chessIcon()}</Load>
@@ -10,8 +16,8 @@ const Spinner = (props) => {
     </Container>
   );
 
-  if (props.showModal) {
-    renderInSpinner = props.children;
+  if (showModal) {
+    renderInSpinner = <>{children}</>;
   }
 
   return <>{renderInSpinner}</>;

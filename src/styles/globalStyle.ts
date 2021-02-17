@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-//import PoppinsRegular from "../assets/fonts/Poppins-Regular.ttf";
 
 export const GlobalStyle = createGlobalStyle`
 

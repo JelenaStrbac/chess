@@ -1,8 +1,15 @@
+import { FC } from "react";
 import styled from "styled-components";
 import CopyTextToClipboard from "../CopyTextToClipboard";
 import Modal from "../Modal";
 
-const ModalRoomId = ({ isShowing, toggle, roomID }) => {
+type Props = {
+  isShowing: boolean;
+  roomID: string;
+  toggle: () => void;
+};
+
+const ModalRoomId: FC<Props> = ({ isShowing, toggle, roomID }) => {
   return (
     <Modal isShowing={isShowing} hide={toggle}>
       <h2>Invite your friend</h2>
@@ -51,9 +58,8 @@ const ButtonStyle = styled.button`
   outline: none;
   margin: 2.5rem;
   &:hover {
-    box-shadow: ${(props) =>
-      props.isDisabled ? "none" : "0px 15px 20px rgba(209, 139, 71, 0.4)"};
-    transform: ${(props) => (props.isDisabled ? "none" : "translateY(3px)")};
+    box-shadow: "0px 15px 20px rgba(209, 139, 71, 0.4)";
+    transform: "translateY(3px)";
   }
 `;
 
