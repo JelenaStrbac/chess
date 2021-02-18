@@ -1,3 +1,26 @@
+type Args = {
+  board: (
+    | "BB"
+    | "BK"
+    | "BN"
+    | "BP"
+    | "BQ"
+    | "BR"
+    | "WB"
+    | "WK"
+    | "WN"
+    | "WP"
+    | "WQ"
+    | "WR"
+    | null
+  )[][];
+  player: "W" | "B";
+  currentRow: number;
+  currentCol: number;
+  notation: string[];
+  startFields: string[];
+};
+
 // *** KING *** //
 export const king = ({
   board,
@@ -6,7 +29,7 @@ export const king = ({
   currentCol,
   notation,
   startFields,
-}) => {
+}: Args) => {
   const squaresArr = [];
   const currRow = Number(currentRow);
   const currCol = Number(currentCol);
@@ -61,7 +84,7 @@ export const king = ({
     player === "W" &&
     !notation.some((el, i) => i % 2 === 0 && el[1] === "K")
   ) {
-    // queenside 0-0-0
+    // queen-side 0-0-0
     if (
       board[7][0] === "WR" &&
       board[7][1] === null &&
@@ -84,7 +107,7 @@ export const king = ({
     player === "B" &&
     !notation.some((el, i) => i % 2 !== 0 && el[1] === "K")
   ) {
-    // queenside 0-0-0
+    // queen-side 0-0-0
     if (
       board[0][0] === "BR" &&
       board[0][1] === null &&

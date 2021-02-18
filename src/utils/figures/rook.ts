@@ -1,5 +1,26 @@
+type Args = {
+  board: (
+    | "BB"
+    | "BK"
+    | "BN"
+    | "BP"
+    | "BQ"
+    | "BR"
+    | "WB"
+    | "WK"
+    | "WN"
+    | "WP"
+    | "WQ"
+    | "WR"
+    | null
+  )[][];
+  player: "W" | "B";
+  currentRow: number;
+  currentCol: number;
+};
+
 // *** ROOK *** //
-export const rook = ({ board, player, currentRow, currentCol }) => {
+export const rook = ({ board, player, currentRow, currentCol }: Args) => {
   const squaresArr = [];
   const currRow = Number(currentRow);
   const currCol = Number(currentCol);

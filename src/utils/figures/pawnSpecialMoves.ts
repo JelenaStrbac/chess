@@ -1,21 +1,49 @@
+import { RootState } from "../../types";
 import { pawn } from "./pawn";
+
+type Args = {
+  state: RootState["game"];
+  board: (
+    | "BB"
+    | "BK"
+    | "BN"
+    | "BP"
+    | "BQ"
+    | "BR"
+    | "WB"
+    | "WK"
+    | "WN"
+    | "WP"
+    | "WQ"
+    | "WR"
+    | null
+  )[][];
+  player: "W" | "B";
+  currentRow: number;
+  currentCol: number;
+  wanRow: number;
+  wanCol: number;
+  notation: string[];
+  pawnDiagonal: boolean;
+  startFields: string[];
+};
 
 export const pawnSpecialMoves = ({
   state,
   board,
   player,
-  currRow,
-  currCol,
+  currentRow,
+  currentCol,
   wanRow,
   wanCol,
   notation,
   startFields,
-}) => {
+}: Args) => {
   const movingFigureArray = pawn({
     board,
     player,
-    currentRow: currRow,
-    currentCol: currCol,
+    currentRow,
+    currentCol,
     notation,
     startFields,
   });
@@ -23,9 +51,11 @@ export const pawnSpecialMoves = ({
   // en passant
   if (movingFigureArray.includes("en passant")) {
     const numForEnPassantMoving = player === "W" ? 1 : -1;
-    state.captured[player].push(
-      state.board[wanRow + numForEnPassantMoving][wanCol]
-    );
+
+    const enPassantField = state.board[wanRow + numForEnPassantMoving][wanCol];
+    if (enPassantField !== null) {
+      state.captured[player].push(enPassantField);
+    }
     state.board[wanRow + numForEnPassantMoving][wanCol] = null;
   }
   // pawn promotion

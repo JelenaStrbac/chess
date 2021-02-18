@@ -1,3 +1,27 @@
+type Args = {
+  board: (
+    | "BB"
+    | "BK"
+    | "BN"
+    | "BP"
+    | "BQ"
+    | "BR"
+    | "WB"
+    | "WK"
+    | "WN"
+    | "WP"
+    | "WQ"
+    | "WR"
+    | null
+  )[][];
+  player: "W" | "B";
+  currentRow: number;
+  currentCol: number;
+  notation: string[];
+  pawnDiagonal?: boolean;
+  startFields: string[];
+};
+
 // *** PAWN *** //
 export const pawn = ({
   board,
@@ -7,7 +31,7 @@ export const pawn = ({
   notation,
   pawnDiagonal,
   startFields,
-}) => {
+}: Args) => {
   let squaresArr = [];
   const currRow = Number(currentRow);
   const currCol = Number(currentCol);
