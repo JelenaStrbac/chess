@@ -2,6 +2,44 @@ import { findAllMovesAllFigures } from "./findAllMovesAllFigures";
 import allMovingFiguresFns from "../figures/allMovingFiguresFns";
 import { checkIfKingIsUnderCheckmate } from "./checkIfKingIsUnderCheckmate";
 import { determineCurrentFigure } from "../gameFlowHelpers/determineCurrentFigure";
+import { RootState } from "../../types";
+
+type Args = {
+  board: (
+    | "BB"
+    | "BK"
+    | "BN"
+    | "BP"
+    | "BQ"
+    | "BR"
+    | "WB"
+    | "WK"
+    | "WN"
+    | "WP"
+    | "WQ"
+    | "WR"
+    | null
+  )[][];
+  player: "W" | "B";
+  currFigure:
+    | "BB"
+    | "BK"
+    | "BN"
+    | "BP"
+    | "BQ"
+    | "BR"
+    | "WB"
+    | "WK"
+    | "WN"
+    | "WP"
+    | "WQ"
+    | "WR";
+  currField: string;
+  notation: string[];
+  startFields: string[];
+  isGameEnded: boolean;
+  state: RootState["game"];
+};
 
 export const findPossibleMovesCurrFig = ({
   board,
@@ -12,17 +50,19 @@ export const findPossibleMovesCurrFig = ({
   startFields,
   isGameEnded,
   state,
-}) => {
-  const [currentRow, currentCol] = currField?.split("-");
+}: Args) => {
+  const [currentRow, currentCol] = currField
+    ?.split("-")
+    .map((el) => Number(el));
   const figure = determineCurrentFigure(currFigure);
 
   // find all moves of opposite player
-  const pawnSpecialMoves = true;
+  //const pawnSpecialMoves = true;
   const allPossibleMoves = findAllMovesAllFigures({
     board: board,
     player: player,
     notation: notation,
-    pawnSpecialMoves: pawnSpecialMoves,
+    //pawnSpecialMoves: pawnSpecialMoves,
     startFields: startFields,
   });
 
@@ -30,8 +70,7 @@ export const findPossibleMovesCurrFig = ({
 
   // if figure is KING, it can move only on fields that not under attack of opposite figures
   if (figure === "K") {
-    const newBoard = [];
-    board.forEach((el) => newBoard.push([...el]));
+    const newBoard: Args["board"] = JSON.parse(JSON.stringify(board));
     newBoard[currentRow][currentCol] = null;
 
     const movesOfCurrFigureArray = allMovingFiguresFns["K"]({
@@ -43,21 +82,21 @@ export const findPossibleMovesCurrFig = ({
       startFields: startFields,
     }).filter((element) => !allPossibleMoves.includes(element));
 
-    const movesArray = [];
+    const movesArray: string[] = [];
     movesOfCurrFigureArray.forEach((el) => {
-      const [row, col] = el?.split("-");
+      const [row, col] = el?.split("-").map((el) => Number(el));
 
-      const updatedBoard = [];
+      const updatedBoard: Args["board"] = [];
       newBoard.forEach((elem) => updatedBoard.push([...elem]));
       updatedBoard[row][col] = currFigure;
 
       if (
-        !checkIfKingIsUnderCheckmate(
-          updatedBoard,
+        !checkIfKingIsUnderCheckmate({
+          board: updatedBoard,
           player,
           notation,
-          startFields
-        )
+          startFields,
+        })
       ) {
         movesArray.push(el);
       }
@@ -75,11 +114,12 @@ export const findPossibleMovesCurrFig = ({
     // if is OTHER figure => two possibilities:
   } else {
     // if moving of that figure would cause king to be checkmated, figure does not have possible moves // else only moves that would protect king
-    const newBoard = [];
-    board.forEach((el) => newBoard.push([...el]));
+    const newBoard: Args["board"] = JSON.parse(JSON.stringify(board));
     newBoard[currentRow][currentCol] = null;
 
-    const movesOfCurrFigureArray = allMovingFiguresFns[figure]({
+    const movesOfCurrFigureArray = allMovingFiguresFns[
+      figure as keyof typeof allMovingFiguresFns
+    ]({
       board: board,
       player: player,
       currentRow: currentRow,
@@ -88,21 +128,21 @@ export const findPossibleMovesCurrFig = ({
       startFields: startFields,
     })?.filter((el) => el !== "en passant" && el !== "pawn promotion");
 
-    const movesArray = [];
+    const movesArray: string[] = [];
     movesOfCurrFigureArray.forEach((el) => {
-      const [row, col] = el?.split("-");
+      const [row, col] = el?.split("-").map((el) => Number(el));
 
-      const updatedBoard = [];
+      const updatedBoard: Args["board"] = [];
       newBoard.forEach((elem) => updatedBoard.push([...elem]));
       updatedBoard[row][col] = currFigure;
 
       if (
-        !checkIfKingIsUnderCheckmate(
-          updatedBoard,
+        !checkIfKingIsUnderCheckmate({
+          board: updatedBoard,
           player,
           notation,
-          startFields
-        )
+          startFields,
+        })
       ) {
         movesArray.push(el);
       }
