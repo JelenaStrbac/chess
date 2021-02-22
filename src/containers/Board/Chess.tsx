@@ -205,7 +205,7 @@ const Chess = () => {
 
       <PlayerTwo>
         <Player
-          rotate
+          rotate="true"
           color={oppositeColor}
           activePlayer={activePlayer}
           capturedFigures={captured?.[oppositeColor]}

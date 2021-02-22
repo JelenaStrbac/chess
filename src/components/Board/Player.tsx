@@ -30,7 +30,7 @@ const figures = {
 };
 
 type Props = {
-  rotate?: boolean;
+  rotate?: string;
   color: null | "W" | "B";
   activePlayer: "W" | "B";
   notation: string[];
@@ -123,7 +123,7 @@ const Player: FC<Props> = ({
 
 const PlayerContainer = styled.div<{
   color?: "W" | "B";
-  rotate?: boolean;
+  rotate?: string;
 }>`
   display: flex;
   flex-direction: ${(props) => (props.rotate ? "column-reverse" : "column")};
@@ -133,7 +133,7 @@ const PlayerContainer = styled.div<{
 
 const MenuStyled = styled.div<{
   color?: "W" | "B";
-  rotate?: boolean;
+  rotate?: string;
   activePlayer: "W" | "B";
 }>`
   display: flex;
@@ -211,7 +211,7 @@ const MiniTitle = styled.div<{ color?: "W" | "B" }>`
 
 const Box = styled.div<{
   color?: "W" | "B";
-  rotate?: boolean;
+  rotate?: string;
   activePlayer: "W" | "B";
 }>`
   display: flex;
