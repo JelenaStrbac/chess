@@ -1,15 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { database } from "../../../services/firebaseDb";
+import { RootState } from "../../../types";
 import { generateRandomPlayerColor } from "../../../utils/createGameHelpers/generateRandomPlayerColor";
 import { generateRoomNum } from "../../../utils/createGameHelpers/generateRoomNum";
 import { resetRoomState } from "../../../utils/gameFlowHelpers/resetRoomState";
 
 export const createRoom = createAsyncThunk(
   "rooms/saveNewRoom",
-  async (name, store) => {
-    const game = store.getState().game;
+  async (name: string, { getState }) => {
+    const state = getState() as RootState;
+    const game = state.game;
     const roomID = generateRoomNum();
-    const playerColorOne = generateRandomPlayerColor();
+    const playerColorOne: "W" | "B" = generateRandomPlayerColor();
 
     const room = {
       game,
@@ -28,7 +30,7 @@ export const createRoom = createAsyncThunk(
 
 export const joinRoom = createAsyncThunk(
   "rooms/joinToRoom",
-  async ({ roomID, name }) => {
+  async ({ roomID, name }: { roomID: string; name: string }) => {
     let playerColorOne;
 
     await database
@@ -38,7 +40,7 @@ export const joinRoom = createAsyncThunk(
         playerColorOne = snapshot.val().color;
       });
 
-    const playerColorTwo = playerColorOne === "W" ? "B" : "W";
+    const playerColorTwo: "W" | "B" = playerColorOne === "W" ? "B" : "W";
 
     const updates = {
       playerTwo: {
@@ -54,7 +56,7 @@ export const joinRoom = createAsyncThunk(
   }
 );
 
-const initialState = {
+const initialState: RootState["room"] = {
   roomID: null,
   status: null,
   color: null,

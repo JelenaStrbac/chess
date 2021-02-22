@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 import Button from "../../components/UI/Button";
@@ -12,9 +12,10 @@ import { checkValidity } from "../../utils/createGameHelpers/checkValidity";
 import background from "../../assets/background/chess-background.png";
 import Shape from "../../components/UI/Shape";
 import { RootState } from "../../types";
+import { useAppDispatch } from "../../store/store";
 
 const JoinGame = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { status } = useSelector((state: RootState) => state.room);
 
   const [formError, setFormError] = useState(false);
@@ -79,7 +80,6 @@ const JoinGame = () => {
       )
     ) {
       dispatch(
-        // @ts-ignore
         joinRoom({
           roomID: inputForm.secretKey.value,
           name: inputForm.name.value,

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { pawnSpecialMoves } from "../../../utils/figures/pawnSpecialMoves";
 import { kingSpecialMoves } from "../../../utils/figures/kingSpecialMoves";
@@ -11,8 +11,9 @@ import { resetStateForRematch } from "../../../utils/gameFlowHelpers/resetStateF
 import { findPossibleMovesCurrFig } from "../../../utils/movesAndCheckmate/findPossibleMovesCurrFig";
 import { writeNotation } from "../../../utils/gameFlowHelpers/writeNotation";
 import { writeFieldFromWhichFigIsMoved } from "../../../utils/gameFlowHelpers/writeFieldFromWhichFigIsMoved";
+import { RootState } from "../../../types";
 
-export const initialState = {
+export const initialState: RootState["game"] = {
   board: [
     ["BR", "BN", "BB", "BQ", "BK", "BB", "BN", "BR"],
     ["BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP"],
@@ -54,7 +55,26 @@ const boardSlice = createSlice({
   initialState,
   reducers: {
     selectAndMoveFigure: {
-      reducer(state, action) {
+      reducer(
+        state,
+        action: PayloadAction<{
+          currFigure:
+            | "BB"
+            | "BK"
+            | "BN"
+            | "BP"
+            | "BQ"
+            | "BR"
+            | "WB"
+            | "WK"
+            | "WN"
+            | "WP"
+            | "WQ"
+            | "WR"
+            | null;
+          currField: string;
+        }>
+      ) {
         state.end.isRematch = false;
 
         const { currField, currFigure } = action.payload;
@@ -120,8 +140,8 @@ const boardSlice = createSlice({
               state: state,
               board: state.board,
               player: state.activePlayer,
-              currRow,
-              currCol,
+              currentRow: currRow,
+              currentCol: currCol,
               wanRow,
               wanCol,
               notation: state.notation,
@@ -136,10 +156,12 @@ const boardSlice = createSlice({
               pawnSpecialMoves(specialMovesArgObj);
             }
             // adding captured figures
-            let captured = "";
+            let captured;
             if (state.board[wanRow][wanCol]) {
               captured = state.board[wanRow][wanCol];
-              state.captured[state.activePlayer].push(captured);
+              if (captured) {
+                state.captured[state.activePlayer].push(captured);
+              }
               state.captured[state.activePlayer] = state.captured[
                 state.activePlayer
               ].filter((el) => el !== null);
@@ -154,7 +176,9 @@ const boardSlice = createSlice({
                 prevCol: currCol,
               })
             );
-            state.board[wanRow][wanCol] = state.current.figure;
+            if (state.current.figure !== "") {
+              state.board[wanRow][wanCol] = state.current.figure;
+            }
             state.board[currRow][currCol] = null;
             state.possibleMoves = [];
             state.activePlayerStatus = "selecting";
@@ -164,17 +188,40 @@ const boardSlice = createSlice({
           }
         }
       },
-      prepare(currField, currFigure) {
+      prepare(payload: {
+        currFigure:
+          | "BB"
+          | "BK"
+          | "BN"
+          | "BP"
+          | "BQ"
+          | "BR"
+          | "WB"
+          | "WK"
+          | "WN"
+          | "WP"
+          | "WQ"
+          | "WR"
+          | null;
+        currField: string;
+      }) {
         return {
-          payload: { currField, currFigure },
+          payload,
         };
       },
     },
-    promotePawnTo(state, action) {
+    promotePawnTo(state, action: PayloadAction<"B" | "Q" | "R" | "N">) {
       state.pawnPromotion[state.activePlayer] = action.payload;
     },
     gameEnd: {
-      reducer(state, action) {
+      reducer(
+        state,
+        action: PayloadAction<{
+          howIsGameEnded: "" | "checkmate" | "resign";
+          winner: string;
+          loser: string;
+        }>
+      ) {
         const { howIsGameEnded, winner, loser } = action.payload;
         if (!state.end.isGameEnded) {
           state.end.isGameEnded = true;
@@ -183,9 +230,13 @@ const boardSlice = createSlice({
           state.end.loser = loser;
         }
       },
-      prepare(howIsGameEnded, winner, loser) {
+      prepare(payload: {
+        howIsGameEnded: "" | "checkmate" | "resign";
+        winner: string;
+        loser: string;
+      }) {
         return {
-          payload: { howIsGameEnded, winner, loser },
+          payload,
         };
       },
     },
@@ -195,7 +246,7 @@ const boardSlice = createSlice({
     resetGame(state) {
       resetStateForRematch(state);
     },
-    addUpdatedGame(state, action) {
+    addUpdatedGame(state, action: PayloadAction<RootState["game"]>) {
       if (action.payload) {
         state.board = action.payload.board;
         state.activePlayer = action.payload.activePlayer;

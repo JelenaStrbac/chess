@@ -1,1 +1,2 @@
-export const determineCurrentFigure = (currFigure: string) => currFigure?.[1];
+export const determineCurrentFigure = (currFigure: string | null) =>
+  currFigure?.[1];

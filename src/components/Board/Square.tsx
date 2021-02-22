@@ -29,8 +29,7 @@ const figures = {
   WR: WR,
 };
 
-type Props = {
-  color: "selected" | "white" | "black";
+type WithFigureProps = {
   fig:
     | "BB"
     | "BK"
@@ -45,31 +44,52 @@ type Props = {
     | "WQ"
     | "WR"
     | null;
-  field?: string;
+  field: string;
+  handleClick: (fig: WithFigureProps["fig"], field: string) => void;
+};
+
+type WithoutFigureProps = {
+  fig: "BB" | "BN" | "BQ" | "BR" | "WB" | "WN" | "WQ" | "WR";
+  handleClick: (fig: WithoutFigureProps["fig"]) => void;
+};
+
+type CommonProps = {
+  color: "selected" | "white" | "black";
   isBlack?: boolean;
   possibleMove?: boolean;
   capturedFigures?: boolean;
-  handleClick: (name: Props["fig"], id?: Props["field"]) => void;
+};
+
+type Props = CommonProps & (WithFigureProps | WithoutFigureProps);
+
+const isWithFigureProps = (
+  rest: WithFigureProps | WithoutFigureProps
+): rest is WithFigureProps => {
+  return (rest as WithFigureProps).field !== undefined;
 };
 
 const Square: FC<Props> = ({
   color,
-  fig,
-  field,
   isBlack,
   possibleMove,
   capturedFigures,
-  handleClick,
+  ...rest
 }) => {
   return (
     <SquareContainer
       color={color}
-      onClick={() => handleClick(fig, field)}
+      onClick={() => {
+        if (isWithFigureProps(rest)) {
+          rest.handleClick(rest.fig, rest.field);
+        } else {
+          rest.handleClick(rest.fig);
+        }
+      }}
       isBlack={isBlack}
     >
-      {fig ? <ImgStyled src={figures[fig]} id={field} alt={fig} /> : null}
-      {possibleMove ? <Circle id={field}></Circle> : null}
-      {capturedFigures ? <CapturedCircle id={field}></CapturedCircle> : null}
+      {rest.fig ? <ImgStyled src={figures[rest.fig]} alt={rest.fig} /> : null}
+      {possibleMove ? <Circle></Circle> : null}
+      {capturedFigures ? <CapturedCircle></CapturedCircle> : null}
     </SquareContainer>
   );
 };

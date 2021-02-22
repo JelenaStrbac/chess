@@ -24,7 +24,7 @@ type Args = {
   wanRow: number;
   wanCol: number;
   notation: string[];
-  pawnDiagonal: boolean;
+  pawnDiagonal?: boolean;
   startFields: string[];
 };
 
@@ -68,6 +68,19 @@ export const pawnSpecialMoves = ({
     startFields,
   });
   if (movingFigureArrayTwo.includes("pawn promotion")) {
-    state.current.figure = `${player}${state.pawnPromotion[player]}`;
+    const fig:
+      | "BB"
+      | "BK"
+      | "BN"
+      | "BP"
+      | "BQ"
+      | "BR"
+      | "WB"
+      | "WK"
+      | "WN"
+      | "WP"
+      | "WQ"
+      | "WR" = `${player}${state.pawnPromotion[player]}` as const;
+    state.current.figure = fig;
   }
 };

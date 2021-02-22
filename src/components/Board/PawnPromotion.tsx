@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
 
 import { promotePawnTo } from "../../store/slices/board/boardSlice";
 import Square from "./Square";
 import { FC } from "react";
+import { useAppDispatch } from "../../store/store";
 
 type Props = {
   color: "B" | "W";
@@ -13,26 +13,15 @@ type WhitePromotion = "WB" | "WN" | "WQ" | "WR";
 type BlackPromotion = "BB" | "BN" | "BQ" | "BR";
 
 const PawnPromotion: FC<Props> = ({ color }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onClickHandler = (
-    name:
-      | "BB"
-      | "BK"
-      | "BN"
-      | "BP"
-      | "BQ"
-      | "BR"
-      | "WB"
-      | "WK"
-      | "WN"
-      | "WP"
-      | "WQ"
-      | "WR"
-      | null
+    fig: "BB" | "BN" | "BQ" | "BR" | "WB" | "WN" | "WQ" | "WR"
   ) => {
-    const nameLetter = name?.[1];
-    dispatch(promotePawnTo(nameLetter));
+    const nameLetter = fig?.[1] as "B" | "Q" | "R" | "N";
+    if (nameLetter) {
+      dispatch(promotePawnTo(nameLetter));
+    }
   };
 
   const arrWithFigures: (WhitePromotion | BlackPromotion)[] =

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import Square from "../../components/Board/Square";
@@ -20,9 +20,10 @@ import PawnPromotion from "../../components/Board/PawnPromotion";
 import Logo from "../../components/UI/Logo";
 import { resetRoom } from "../../store/slices/rooms/roomsSlice";
 import { RootState } from "../../types";
+import { useAppDispatch } from "../../store/store";
 
 const Chess = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { board } = useSelector((state: RootState) => state.game);
 
   const { activePlayer } = useSelector((state: RootState) => state.game);
@@ -107,7 +108,7 @@ const Chess = () => {
 
   // on click dispatch actions in redux store to SELECT and MOVE figure (only allowed for active player)
   const onClickHandler = (
-    name:
+    fig:
       | "BB"
       | "BK"
       | "BN"
@@ -121,14 +122,13 @@ const Chess = () => {
       | "WQ"
       | "WR"
       | null,
-    id?: string
+    field: string
   ) => {
-    const currTargetedField = id;
-    const currTargetedFigure = name;
+    const currFigure = fig;
+    const currField = field;
 
     if (activePlayer === color) {
-      // @ts-ignore
-      dispatch(selectAndMoveFigure(currTargetedField, currTargetedFigure));
+      dispatch(selectAndMoveFigure({ currFigure, currField }));
     }
   };
 
@@ -137,21 +137,18 @@ const Chess = () => {
     if (activePlayer === color) {
       const loser = activePlayer;
       const winner = activePlayer === "W" ? "B" : "W";
-      // @ts-ignore
-      dispatch(gameEnd("resign", winner, loser));
+      dispatch(gameEnd({ howIsGameEnded: "resign", winner, loser }));
     }
   };
 
   // handle rematch
   const handleRematch = () => {
-    // @ts-ignore
     dispatch(rematch());
   };
 
   // handle reset
   const handleReset = () => {
     dispatch(resetRoom());
-    // @ts-ignore
     dispatch(resetGame());
   };
 

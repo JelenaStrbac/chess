@@ -33,7 +33,8 @@ type Args = {
     | "WN"
     | "WP"
     | "WQ"
-    | "WR";
+    | "WR"
+    | null;
   currField: string;
   notation: string[];
   startFields: string[];

@@ -19,7 +19,21 @@ export interface RootState {
     activePlayerStatus: "selecting" | "moving";
     current: {
       field: string;
-      figure: string;
+      figure:
+        | "BB"
+        | "BK"
+        | "BN"
+        | "BP"
+        | "BQ"
+        | "BR"
+        | "WB"
+        | "WK"
+        | "WN"
+        | "WP"
+        | "WQ"
+        | "WR"
+        | null
+        | "";
     };
     possibleMoves: string[];
     notation: string[];

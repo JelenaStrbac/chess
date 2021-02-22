@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -15,9 +15,10 @@ import { checkValidity } from "../../utils/createGameHelpers/checkValidity";
 import background from "../../assets/background/chess-background.png";
 import Shape from "../../components/UI/Shape";
 import { RootState } from "../../types";
+import { useAppDispatch } from "../../store/store";
 
 const CreateGame = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { status } = useSelector((state: RootState) => state.room);
   const { roomID } = useSelector((state: RootState) => state.room);
 
@@ -91,7 +92,6 @@ const CreateGame = () => {
         (el) => inputForm[el as keyof typeof inputForm].valid === true
       )
     ) {
-      // @ts-ignore
       dispatch(createRoom(inputForm.name.value));
       toggle();
     } else {
