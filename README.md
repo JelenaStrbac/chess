@@ -11,6 +11,7 @@
 ## How it is built?
 
 - ReactJS (functional components, incl. React hooks);
+- TypeScript;
 - Redux Toolkit;
 - Styled Components (styling adapted for mobile and desktop);
 - Testing with Jest and React Testing Library - 🔜 to be completed;
